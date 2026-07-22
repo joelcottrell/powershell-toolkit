@@ -1,0 +1,4 @@
+vSwitchName,PortGroup,VlanID
+vSwitch1,Production,100
+vSwitch1,Development,200
+vSwitch2,Backup,300

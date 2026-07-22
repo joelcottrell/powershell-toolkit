@@ -1,0 +1,4 @@
+vdsName,PortGroup,VlanID
+Production-VDS,Production-App,100
+Production-VDS,Production-Web,200
+Backup-VDS,Backup-Network,300
