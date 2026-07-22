@@ -39,6 +39,8 @@ powershell-toolkit/
 ├── SharePoint/            # SharePoint Online administration
 ├── Teams/                 # Microsoft Teams management
 ├── VMWare/PowerCLI/       # VMware vSphere automation scripts
+│   └── Networking/
+│       └── PortGroup-Provisioning/
 └── Windows/               # Windows Server administration scripts
 ```
 
@@ -86,6 +88,12 @@ git clone https://github.com/bigjoestretch/powershell-toolkit.git
 .\VMWare\PowerCLI\Get-VMInventory.ps1 -VCenterServer "vcenter.domain.com"
 ```
 
+### VMware Networking
+
+- [Port Group Provisioning](VMWare/PowerCLI/Networking/PortGroup-Provisioning/)  
+  Creates VMware standard vSwitches, standard port groups, and distributed port groups from validated CSV configuration files.
+```
+  
 ### Microsoft 365 Administration
 ```powershell
 # Example: Exchange Online mailbox report
