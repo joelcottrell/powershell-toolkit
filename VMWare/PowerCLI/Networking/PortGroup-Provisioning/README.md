@@ -1,17 +1,159 @@
-# VMware PowerCLI Network Port Group Provisioning
+# VMware PowerCLI - Port Group Provisioning
 
-PowerShell and VMware PowerCLI scripts for deploying standard vSwitch port groups across ESXi hosts in a cluster and distributed port groups on existing vSphere Distributed Switches.
+This VMware PowerCLI project provides scripts for deploying standard and distributed port groups from validated CSV configuration files.
 
-## Included scripts
+✅ Creates missing standard vSwitches across all eligible ESXi hosts in a selected cluster
 
-| Script | Purpose |
-|---|---|
-| `New-StandardSwitchPortGroups.ps1` | Creates missing standard vSwitches and standard port groups on each eligible ESXi host in a selected cluster. |
-| `New-DistributedPortGroups.ps1` | Creates missing distributed port groups on existing vSphere Distributed Switches. |
+🌐 Creates standard and distributed port groups from CSV configuration
 
-Both scripts validate their CSV input, display the planned configuration, require confirmation, support `-WhatIf`, write detailed logs, warn about existing objects, and disconnect from vCenter when processing completes.
+⚠️ Detects existing switches, port groups, missing switches, and VLAN mismatches
 
-## Project structure
+📊 Displays detailed console progress for each ESXi host and task
+
+📝 Writes timestamped success, warning, and failure details to a relative `Logs` folder
+
+---
+
+## Standard vSwitch and Port Group Script
+
+[New-StandardSwitchPortGroups.ps1](New-StandardSwitchPortGroups.ps1)
+
+This script processes each eligible ESXi host in a selected cluster and applies the standard networking configuration defined in `portgroups.csv`.
+
+### 🔧 Requirements
+
+- Windows PowerShell 5.1 or PowerShell 7+
+- VMware PowerCLI or VCF PowerCLI
+- Network connectivity to vCenter
+- Permission to read clusters and ESXi hosts
+- Permission to create standard vSwitches and port groups
+- A reviewed `portgroups.csv` file in the `Config` folder
+
+### 📄 CSV Configuration
+
+Create the working CSV file from the included example:
+
+```powershell
+Copy-Item `
+    .\Config\portgroups.example.csv `
+    .\Config\portgroups.csv
+```
+
+The CSV requires the following columns:
+
+```csv
+vSwitchName,PortGroup,VlanID
+vSwitch1,Production,100
+vSwitch1,Development,200
+vSwitch2,Backup,300
+```
+
+### ▶️ Usage
+
+Run interactively:
+
+```powershell
+.\New-StandardSwitchPortGroups.ps1
+```
+
+Preview the operation without making changes:
+
+```powershell
+.\New-StandardSwitchPortGroups.ps1 -WhatIf
+```
+
+Provide the vCenter and cluster names as parameters:
+
+```powershell
+.\New-StandardSwitchPortGroups.ps1 `
+    -vCenter "vcenter.domain.com" `
+    -ClusterName "Production-Cluster"
+```
+
+Skip the interactive CSV confirmation only after the configuration has already been reviewed:
+
+```powershell
+.\New-StandardSwitchPortGroups.ps1 `
+    -vCenter "vcenter.domain.com" `
+    -ClusterName "Production-Cluster" `
+    -Force
+```
+
+### ⚙️ Existing Object Behavior
+
+- Existing standard vSwitches are displayed and logged as warnings.
+- Existing standard vSwitches are reused so missing port groups can still be created.
+- Existing port groups are skipped and logged.
+- Existing port groups with a VLAN that differs from the CSV value generate a warning.
+- VLAN mismatches are not corrected automatically.
+
+---
+
+## Distributed Port Group Script
+
+[New-DistributedPortGroups.ps1](New-DistributedPortGroups.ps1)
+
+This script creates missing distributed port groups on existing VMware vSphere Distributed Switches.
+
+### 🔧 Requirements
+
+- Windows PowerShell 5.1 or PowerShell 7+
+- VMware PowerCLI or VCF PowerCLI
+- Network connectivity to vCenter
+- Existing vSphere Distributed Switches
+- Permission to create distributed port groups
+- A reviewed `vdsportgroups.csv` file in the `Config` folder
+
+### 📄 CSV Configuration
+
+Create the working CSV file from the included example:
+
+```powershell
+Copy-Item `
+    .\Config\vdsportgroups.example.csv `
+    .\Config\vdsportgroups.csv
+```
+
+The CSV requires the following columns:
+
+```csv
+vdsName,PortGroup,VlanID
+Production-VDS,Production-App,100
+Production-VDS,Production-Web,200
+Backup-VDS,Backup-Network,300
+```
+
+### ▶️ Usage
+
+Run interactively:
+
+```powershell
+.\New-DistributedPortGroups.ps1
+```
+
+Preview the operation:
+
+```powershell
+.\New-DistributedPortGroups.ps1 -WhatIf
+```
+
+Provide the vCenter name as a parameter:
+
+```powershell
+.\New-DistributedPortGroups.ps1 `
+    -vCenter "vcenter.domain.com"
+```
+
+### ⚙️ Existing Object Behavior
+
+- Existing distributed port groups are skipped and logged.
+- Existing port groups with a VLAN that differs from the CSV value generate a warning.
+- Missing distributed switches are logged and skipped.
+- VLAN mismatches are not corrected automatically.
+
+---
+
+## 📂 Project Structure
 
 ```text
 PortGroup-Provisioning/
@@ -35,79 +177,73 @@ PortGroup-Provisioning/
 └── README.md
 ```
 
-## Requirements
+---
 
-- Windows PowerShell 5.1 or PowerShell 7
-- VMware PowerCLI or VCF PowerCLI
-- Network connectivity to vCenter
-- Appropriate vCenter permissions for the requested operation
-- A reviewed CSV configuration file in the `Config` folder
+## 📋 CSV Review and Confirmation
 
-## Initial setup
+Before connecting to vCenter, each script:
 
-Clone the repository and navigate to the project:
+1. Finds the required CSV file in the relative `Config` folder.
+2. Validates the required columns and values.
+3. Displays the complete configuration in the PowerShell console.
+4. Shows the number of configuration rows and unique switches.
+5. Prompts the operator to type `Y` or `N`.
 
-```powershell
-Set-Location .\VMWare\PowerCLI\Networking\PortGroup-Provisioning
+Example:
+
+```text
+==============================================================================
+CSV CONFIGURATION REVIEW
+==============================================================================
+
+I successfully read and validated the CSV file:
+  C:\GitHub\powershell-toolkit\VMWare\PowerCLI\Networking\
+  PortGroup-Provisioning\Config\portgroups.csv
+
+Configuration rows found : 3
+Unique vSwitches found   : 2
+
+vSwitch   Port Group    VLAN ID
+-------   ----------    -------
+vSwitch1  Development   200
+vSwitch1  Production    100
+vSwitch2  Backup        300
+
+Would you like to proceed with this configuration?
+
+Type Y and press Enter for Yes.
+Type N and press Enter for No.
 ```
 
-Copy the example CSV templates to their runtime filenames:
+Selecting `N` ends the script before connecting to vCenter or making VMware changes.
 
-```powershell
-Copy-Item .\Config\portgroups.example.csv .\Config\portgroups.csv
-Copy-Item .\Config\vdsportgroups.example.csv .\Config\vdsportgroups.csv
+---
+
+## 📊 Console Progress
+
+The scripts display console progress while processing the configuration.
+
+The progress display includes:
+
+- Current ESXi host or distributed port group
+- Current host number and total host count
+- Current task and total task count
+- Switch or port group currently being evaluated
+- Percentage complete
+
+Console step banners also identify the active phase, such as:
+
+```text
+==============================================================================
+STEP 5 OF 6 - CREATING AND VALIDATING STANDARD NETWORKING
+==============================================================================
 ```
 
-Update the copied CSV files with values for your environment. The runtime CSV files are excluded by `.gitignore` so environment-specific network information is not committed accidentally.
+---
 
-## Recommended first run
+## 📁 Logging
 
-Preview the standard vSwitch deployment without making changes:
-
-```powershell
-.\New-StandardSwitchPortGroups.ps1 -WhatIf
-```
-
-Preview the distributed port-group deployment:
-
-```powershell
-.\New-DistributedPortGroups.ps1 -WhatIf
-```
-
-The scripts display the validated CSV configuration and prompt for approval before connecting to vCenter. Use `-Force` only for an already reviewed unattended execution.
-
-## CSV formats
-
-### Standard vSwitch and port groups
-
-```csv
-vSwitchName,PortGroup,VlanID
-vSwitch1,Production,100
-vSwitch1,Development,200
-vSwitch2,Backup,300
-```
-
-### Distributed port groups
-
-```csv
-vdsName,PortGroup,VlanID
-Production-VDS,Production-App,100
-Production-VDS,Production-Web,200
-Backup-VDS,Backup-Network,300
-```
-
-See [Docs/CSV-Reference.md](Docs/CSV-Reference.md) for field definitions and validation behavior.
-
-## Existing object behavior
-
-- An existing standard vSwitch is reused, allowing missing port groups to be created on it.
-- An existing port group is skipped and logged as a warning.
-- When an existing port group's VLAN differs from the CSV value, the script warns and does not change it automatically.
-- A missing distributed switch is logged and skipped.
-
-## Logging
-
-Each run creates a timestamped log under the relative `Logs` folder. Logs are excluded from source control.
+Each execution automatically creates a timestamped log in the relative `Logs` folder.
 
 ```text
 Logs/
@@ -115,36 +251,109 @@ Logs/
 └── DistributedPortGroupDeployment_YYYYMMDD_HHMMSS.log
 ```
 
-## Safety features
+The logs include:
 
-- CSV existence, required-column, empty-value, VLAN-range, and duplicate validation
-- Human-readable CSV preview before connecting to vCenter
-- Y/N confirmation prompt
-- `-WhatIf` and `-Confirm` support
+- Script initialization details
+- CSV path and validation results
+- vCenter connection status
+- ESXi host discovery
+- Existing switch and port-group warnings
+- Successful object creation
+- VLAN mismatch warnings
+- Per-object failures
+- Completion statistics
+- vCenter disconnection status
+
+The `Logs` folder moves with the project, so the script paths do not need to be changed when the project is relocated.
+
+---
+
+## 🛡️ Safety Features
+
+- CSV file existence validation
+- Required-column validation
+- Empty-value detection
+- VLAN range validation
+- Duplicate configuration detection
+- Human-readable CSV preview
+- Interactive Y/N confirmation
+- `-WhatIf` support
+- `-Confirm` support
 - Existing-object detection
 - VLAN mismatch warnings
 - Per-object exception handling
-- Detailed console progress and timestamped logs
-- Guaranteed vCenter disconnection in the cleanup path
+- Detailed progress reporting
+- Timestamped logging
+- Guaranteed vCenter disconnection during cleanup
 
-## Important scope notes
+---
 
-The standard vSwitch script does not currently assign physical uplinks or configure MTU, NIC teaming, security policies, or traffic shaping. A newly created standard vSwitch without a physical adapter may not provide external connectivity.
+## ⚠️ Important Scope Notes
 
-The distributed script currently creates standard access VLAN port groups. VLAN trunks, private VLANs, advanced teaming, and other distributed port-group policies are outside its current scope.
+The standard vSwitch script does not currently configure:
 
-## Testing
+- Physical uplink assignment
+- MTU
+- NIC teaming and failover order
+- Load-balancing policies
+- Security policies
+- Traffic shaping
 
-The included Pester tests validate repository structure, CSV template headers, relative-path usage, and the absence of obvious hardcoded user-profile paths. They do not connect to vCenter.
+A newly created standard vSwitch without a physical adapter may not provide external network connectivity.
+
+The distributed port-group script currently creates standard access VLAN port groups. It does not configure:
+
+- VLAN trunk ranges
+- Private VLANs
+- Advanced teaming policies
+- Distributed port-group security settings
+- Traffic shaping
+
+Always review the planned configuration and test with `-WhatIf` before making changes.
+
+---
+
+## 🧪 Testing
+
+The included Pester tests validate:
+
+- Expected project files and folders
+- CSV template headers
+- Relative path usage
+- Absence of obvious hardcoded user-profile paths
+
+Run the repository tests with:
 
 ```powershell
 Invoke-Pester .\Tests\Repository.Tests.ps1
 ```
 
-## Author
+The included tests do not connect to vCenter or create VMware objects.
 
-Joel Cottrell
+---
 
-## License
+## 📚 Additional Documentation
+
+- [CSV Reference](Docs/CSV-Reference.md)
+- [Operational Notes](Docs/Operational-Notes.md)
+- [Repository Integration](Docs/Repository-Integration.md)
+- [Usage Examples](Examples/Usage-Examples.ps1)
+- [Changelog](CHANGELOG.md)
+
+---
+
+## 👤 Author
+
+**Joel Cottrell**
+
+PowerShell automation for enterprise infrastructure administration.
+
+---
+
+## 📜 License
 
 This project inherits the GPL-3.0 license from the repository root.
+
+---
+
+> Always test scripts in a non-production environment before using them in production.
