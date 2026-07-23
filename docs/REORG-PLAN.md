@@ -1,9 +1,35 @@
 # Repository Rearchitecture Plan
 
-**Repository:** `bigjoestretch/powershell-toolkit`
+**Repository:** `bigjoestretch/powershell-toolkit` (now `joelcottrell/powershell-toolkit`)
 **Author:** Joel Cottrell
 **Plan version:** 1.0
-**Status:** Approved, ready for execution
+**Status:** Executed
+
+---
+
+> ## ⚠️ Historical document
+>
+> This is the plan **as approved before execution**, retained as a record of the reasoning
+> behind the current structure. It is not maintained and should not be followed as
+> instructions.
+>
+> Two things changed during execution:
+>
+> 1. **The GitHub account was renamed** from `bigjoestretch` to `joelcottrell`. Every URL
+>    in this document uses the old username and is therefore stale. Old URLs currently
+>    redirect, but only while the `bigjoestretch` namespace holds no repository of the same
+>    name.
+> 2. **The script header in section 7.3 is out of date.** Do not copy it from here. The
+>    authoritative version lives in
+>    [`_Template/Tier1-Standard/Verb-Noun.ps1`](../_Template/Tier1-Standard/Verb-Noun.ps1),
+>    with guidance in [PROJECT-TEMPLATE.md](./PROJECT-TEMPLATE.md).
+>
+> For the rules that are actually in force, see
+> [NAMING-CONVENTIONS.md](./NAMING-CONVENTIONS.md) and
+> [PROJECT-TEMPLATE.md](./PROJECT-TEMPLATE.md).
+>
+> Where execution deviated from this plan, the deviations and their reasons are recorded in
+> the commit messages on the `refactor/repository-structure` branch.
 
 ---
 
