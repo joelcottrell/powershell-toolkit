@@ -1,0 +1,13 @@
+# Project-level ignores. The repository root .gitignore covers the common cases;
+# add anything specific to this project below.
+
+# Working copies of configuration (examples stay tracked)
+Config/*.csv
+!Config/*.example.csv
+Config/*.json
+!Config/*.example.json
+
+# Script output
+Output/
+Reports/
+*.log

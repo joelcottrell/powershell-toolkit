@@ -19,6 +19,7 @@ to [`Windows/`](../Windows/README.md).
 | Technology | Description | |
 | --- | --- | --- |
 | Intune | Compliance, proactive remediations, Win32 apps, device scripts | [Browse](./Intune/README.md) |
+| Windows 365 | Cloud PC configuration and lifecycle | [Browse](./Windows365/README.md) |
 
 ---
 
