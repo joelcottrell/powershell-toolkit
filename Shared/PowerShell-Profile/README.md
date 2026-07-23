@@ -30,7 +30,7 @@ This script:
 ## 🔧 GitHub Source Reference
 
 ```powershell
-$remoteProfile = 'https://raw.githubusercontent.com/bigjoestretch/public/refs/heads/main/PowerShell/PowerShell%20Profile/Microsoft.PowerShell_profile.ps1'
+$remoteProfile = 'https://raw.githubusercontent.com/bigjoestretch/powershell-toolkit/main/Shared/PowerShell-Profile/Microsoft.PowerShell_profile.ps1'
 ```
 
 > 🔁 Update this URL if you move or rename your GitHub repo.
