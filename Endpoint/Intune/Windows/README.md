@@ -1,17 +1,39 @@
-# Microsoft Intune Scripts - Windows
-This repository contains various scripts used to deploy various apps and configurations using Microsoft Intune.
+# Intune - Windows
 
-The scripts provided here are for education and showing what is possible. You are encouraged to download, test and enhance for your own use.
+Microsoft Intune scripts for managing Windows devices: compliance, remediations,
+applications, configuration profiles, and provisioning.
 
-The Repo is split into the folowing sections:
+---
 
-```
-   |-Windows
-   |---Compliance
-   |---DeviceConfiguration
-   |---ProactiveRemediation
-   |---SecurityBaseline
-   |---Win32Apps
-   ```
+## Categories
+
+| Category | Description | |
+| --- | --- | --- |
+| Compliance | Custom compliance discovery scripts and policies | [Browse](./Compliance/README.md) |
+| ProactiveRemediations | Paired detection and remediation scripts | [Browse](./ProactiveRemediations/README.md) |
+| Win32Apps | Application install/uninstall packages | [Browse](./Win32Apps/README.md) |
+| DeviceScripts | Platform scripts that run once on a device | [Browse](./DeviceScripts/README.md) |
+| DeviceConfigurations | Configuration profile references | [Browse](./DeviceConfigurations/README.md) |
+| SecurityBaselines | Security baseline references | [Browse](./SecurityBaselines/README.md) |
+| AutopilotESP | Scripts scoped to the Autopilot Enrollment Status Page | [Browse](./AutopilotESP/README.md) |
+
+---
+
+## Shared prerequisites
+
+| Requirement | Detail |
+| --- | --- |
+| PowerShell | 5.1 or later |
+| Console | Microsoft Intune admin center |
+| Permissions | Intune Administrator or equivalent |
+
+---
+
 ## Disclaimer
-Understand the impact of each sample script prior to running it; samples should be run in a non-production or "test" environment.
+
+Understand the impact of each script before running it. Test in a non-production
+environment first.
+
+---
+
+[Back to repository root](../../../README.md)
