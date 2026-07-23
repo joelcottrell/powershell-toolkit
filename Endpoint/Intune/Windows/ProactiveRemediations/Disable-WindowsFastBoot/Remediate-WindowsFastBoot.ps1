@@ -1,16 +1,16 @@
 <#	
 .NOTES
-	Name: Remediate-Fastboot.ps1
+	Name: Remediate-WindowsFastBoot.ps1
 	Author: Andrew Taylor
 	Modified by: Joel Cottrell
 	Copyright: GPLv3
 	Tags: intune endpoint MEM fastboot
 
 .LICENSEURI
-https://github.com/bigjoestretch/public/blob/main/LICENSE
+https://github.com/bigjoestretch/powershell-toolkit/blob/main/LICENSE
 
 .PROJECTURI
-https://github.com/bigjoestretch/public/tree/main/Intune/Windows/Proactive%20Remediations/Disable%20Windows%20Fast%20Boot
+https://github.com/bigjoestretch/powershell-toolkit/tree/main/Endpoint/Intune/Windows/ProactiveRemediations/Disable-WindowsFastBoot
 
 .ICONURI
 
@@ -30,7 +30,7 @@ Powershell script to remediate (disable) Windows Fast Boot on a Windows device
 This script will remediate (disable) Windows Fast Boot on a Windows device.
     
 .EXAMPLE
-.\Remediate-Fastboot.ps1
+.\Remediate-WindowsFastBoot.ps1
 
 #>
 

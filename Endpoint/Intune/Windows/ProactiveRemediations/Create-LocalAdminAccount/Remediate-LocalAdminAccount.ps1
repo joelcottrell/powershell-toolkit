@@ -1,6 +1,6 @@
 <#
 .NOTES
-    Filename: Remediate-Local_Admin_Account.ps1
+    Filename: Remediate-LocalAdminAccount.ps1
     Version: 1.0
     Author: Joel Cottrell
     Requires: PowerShell v5 
@@ -8,10 +8,10 @@
 	Tags: intune endpoint MEM local admin
  
 .LICENSEURI
-https://github.com/bigjoestretch/public/blob/main/LICENSE
+https://github.com/bigjoestretch/powershell-toolkit/blob/main/LICENSE
 
 .PROJECTURI
-https://github.com/bigjoestretch/public/blob/main/Intune/Windows/Proactive%20Remediations/Create%20Local%20Admin%20Account
+https://github.com/bigjoestretch/powershell-toolkit/tree/main/Endpoint/Intune/Windows/ProactiveRemediations/Create-LocalAdminAccount
 
 .ICONURI
 
@@ -36,7 +36,7 @@ v1.0 - 23/05/23 - Initial release of this script.
     https://cloudinfra.net/create-a-local-admin-using-intune-and-powershell/
 
 .EXAMPLE
-Remediate-Local_Admin_Account.ps1
+Remediate-LocalAdminAccount.ps1
 
 #>
 

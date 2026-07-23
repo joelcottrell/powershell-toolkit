@@ -7,10 +7,10 @@
 	Tags: intune endpoint MEM microsoft365
 
 .LICENSEURI
-https://github.com/bigjoestretch/public/blob/main/LICENSE
+https://github.com/bigjoestretch/powershell-toolkit/blob/main/LICENSE
 
 .PROJECTURI
-https://github.com/bigjoestretch/public/blob/main/Intune/Proactive%20Remediations/Clear%20Microsoft%20Apps%20Cache
+https://github.com/bigjoestretch/powershell-toolkit/tree/main/Endpoint/Intune/Windows/ProactiveRemediations/Clear-MicrosoftAppsCache
 
 .ICONURI
 

@@ -12,7 +12,7 @@ This Netsh PowerShell script performs the following:
 
 ## Netsh Multi Trace Script
 
-[netsh_multi_trace](./netsh_multi_trace.ps1)
+[Start-NetshMultiTrace](./Start-NetshMultiTrace.ps1)
 
 ## 🔧 Requirements:
 

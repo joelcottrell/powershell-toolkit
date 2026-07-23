@@ -7,8 +7,8 @@ Below are the settings configured under the ***Program*** section of the app con
 
 | Description | Value |
 | --- | --- |
-| Install command | **powershell.exe -ExecutionPolicy Bypass -File [install-zulu-jre.ps1](./install-zulu-jre.ps1)** |
-| Uninstall command | **powershell.exe -ExecutionPolicy Bypass -File [uninstall-zulu-jre.ps1](./uninstall-zulu-jre.ps1)** |
+| Install command | **powershell.exe -ExecutionPolicy Bypass -File [Install-ZuluJRE.ps1](./Install-ZuluJRE.ps1)** |
+| Uninstall command | **powershell.exe -ExecutionPolicy Bypass -File [Uninstall-ZuluJRE.ps1](./Uninstall-ZuluJRE.ps1)** |
 | Installation time required (mins) | **60** |
 | Allow available uninstall | **Yes** |
 | Install behavior | **System** |

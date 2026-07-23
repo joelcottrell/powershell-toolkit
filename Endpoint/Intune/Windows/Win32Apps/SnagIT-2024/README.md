@@ -7,8 +7,8 @@ Below are the settings configured under the ***Program*** section of the app con
 
 | Description | Value |
 | --- | --- |
-| Install command | **powershell.exe -ExecutionPolicy Bypass -File [install-snagit-2024.ps1](./install-snagit-2024.ps1)** |
-| Uninstall command | **powershell.exe -ExecutionPolicy Bypass -File [uninstall-snagit-2024.ps1](./uninstall-snagit-2024.ps1)** |
+| Install command | **powershell.exe -ExecutionPolicy Bypass -File [Install-Snagit2024.ps1](./Install-Snagit2024.ps1)** |
+| Uninstall command | **powershell.exe -ExecutionPolicy Bypass -File [Uninstall-Snagit2024.ps1](./Uninstall-Snagit2024.ps1)** |
 | Installation time required (mins) | **60** |
 | Allow available uninstall | **Yes** |
 | Install behavior | **System** |

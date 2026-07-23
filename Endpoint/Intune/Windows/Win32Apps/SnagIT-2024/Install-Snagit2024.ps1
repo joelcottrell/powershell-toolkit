@@ -1,15 +1,15 @@
 <#	
 .NOTES
-	Name: install-snagit-2024.ps1 
+	Name: Install-Snagit2024.ps1 
 	Author: Joel Cottrell
   	Copyright: GPLv3
 	Tags: intune endpoint MEM snagit 2024
 
 .LICENSEURI
-https://github.com/bigjoestretch/public/blob/main/LICENSE
+https://github.com/bigjoestretch/powershell-toolkit/blob/main/LICENSE
 
 .PROJECTURI
-https://github.com/bigjoestretch/public/blob/main/Intune/Windows/Win32Apps/SnagIT%202024
+https://github.com/bigjoestretch/powershell-toolkit/tree/main/Endpoint/Intune/Windows/Win32Apps/SnagIT-2024
 
 
 .ICONURI
@@ -34,7 +34,7 @@ Inspiration in creating this was provide by steps found in this link:
 https://assets.techsmith.com/Docs/Snagit-2024-MSI-Installation-Guide.pdf
 
 .EXAMPLE
-.\install-snagit-2024.ps1
+.\Install-Snagit2024.ps1
 
 #>
 

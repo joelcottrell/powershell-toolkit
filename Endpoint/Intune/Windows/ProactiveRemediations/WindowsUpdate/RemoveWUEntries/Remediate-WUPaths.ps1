@@ -7,10 +7,10 @@
 	Tags: intune endpoint MEM windows update
  
 .LICENSEURI
-https://github.com/bigjoestretch/public/blob/main/LICENSE
+https://github.com/bigjoestretch/powershell-toolkit/blob/main/LICENSE
 
 .PROJECTURI
-https://github.com/bigjoestretch/public/blob/main/Intune/Windows/Proactive%20Remediations/Windows%20Update/RemoveWUEntries
+https://github.com/bigjoestretch/powershell-toolkit/tree/main/Endpoint/Intune/Windows/ProactiveRemediations/WindowsUpdate/RemoveWUEntries
 
 .ICONURI
 

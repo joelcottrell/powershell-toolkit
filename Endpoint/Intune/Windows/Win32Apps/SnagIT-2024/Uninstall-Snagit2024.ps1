@@ -1,15 +1,15 @@
 <#	
 .NOTES
-	Name: uninstall-snagit-2024.ps1
+	Name: Uninstall-Snagit2024.ps1
 	Author: Joel Cottrell
 	Copyright: GPLv3
 	Tags: intune endpoint MEM snagit 2024
 
 .LICENSEURI
-https://github.com/bigjoestretch/public/blob/main/LICENSE
+https://github.com/bigjoestretch/powershell-toolkit/blob/main/LICENSE
 
 .PROJECTURI
-https://github.com/bigjoestretch/public/blob/main/Intune/Windows/Win32Apps/SnagIT%202024
+https://github.com/bigjoestretch/powershell-toolkit/tree/main/Endpoint/Intune/Windows/Win32Apps/SnagIT-2024
 
 .ICONURI
 
@@ -29,7 +29,7 @@ Uninstall script used to uninstall the SnagIT 2024 application from a Windows de
 This script is used to uninstall the SnagIT 2024 application from a Windows device.
 
 .EXAMPLE
-.\uninstall-snagit-2024.ps1
+.\Uninstall-Snagit2024.ps1
 
 #>
 

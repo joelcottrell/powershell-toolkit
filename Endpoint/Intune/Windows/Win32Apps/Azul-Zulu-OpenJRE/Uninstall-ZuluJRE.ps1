@@ -1,15 +1,15 @@
 <#	
 .NOTES
-	Name: uninstall-zulu-jre.ps1
+	Name: Uninstall-ZuluJRE.ps1
 	Author: Joel Cottrell
 	Copyright: GPLv3
 	Tags: intune endpoint MEM azul zulu jre
 
 .LICENSEURI
-https://github.com/bigjoestretch/public/blob/main/LICENSE
+https://github.com/bigjoestretch/powershell-toolkit/blob/main/LICENSE
 
 .PROJECTURI
-https://github.com/bigjoestretch/public/blob/main/Intune/Windows/Win32Apps/Azul%20Zulu%20OpenJRE
+https://github.com/bigjoestretch/powershell-toolkit/tree/main/Endpoint/Intune/Windows/Win32Apps/Azul-Zulu-OpenJRE
 
 .ICONURI
 
@@ -33,7 +33,7 @@ Inspiration in creating this was provide by steps found in this link:
 https://docs.azul.com/core/uninstall/windows
     
 .EXAMPLE
-./uninstall-zulu-jre.ps1
+./Uninstall-ZuluJRE.ps1
 
 #>
 

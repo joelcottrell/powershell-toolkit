@@ -1,15 +1,15 @@
 <#	
 .NOTES
-	Name: install-zulu-jre.ps1
+	Name: Install-ZuluJRE.ps1
 	Author: Joel Cottrell
 	Copyright: GPLv3
 	Tags: intune endpoint MEM azul zulu jre
 
 .LICENSEURI
-https://github.com/bigjoestretch/public/blob/main/LICENSE
+https://github.com/bigjoestretch/powershell-toolkit/blob/main/LICENSE
 
 .PROJECTURI
-https://github.com/bigjoestretch/public/blob/main/Intune/Windows/Win32Apps/Azul%20Zulu%20OpenJRE
+https://github.com/bigjoestretch/powershell-toolkit/tree/main/Endpoint/Intune/Windows/Win32Apps/Azul-Zulu-OpenJRE
 
 .ICONURI
 
@@ -34,7 +34,7 @@ https://www.azul.com/downloads/?package=jre#zulu
 https://docs.azul.com/core/install/windows
     
 .EXAMPLE
-./install-zulu-jre.ps1
+./Install-ZuluJRE.ps1
 
 #>
 

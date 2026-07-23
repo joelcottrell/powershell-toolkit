@@ -1,15 +1,15 @@
 <#	
 .NOTES
-	Name: Disable_Run_Command_RegistryKey_Remediation.ps1
+	Name: Remediate-RunCommandRegistryKey.ps1
 	Author: Joel Cottrell
 	Copyright: GPLv3
 	Tags: intune endpoint MEM proactive remediation disable run
 
 .LICENSEURI
-https://github.com/bigjoestretch/public/blob/main/LICENSE
+https://github.com/bigjoestretch/powershell-toolkit/blob/main/LICENSE
 
 .PROJECTURI
-https://github.com/bigjoestretch/public/blob/main/Intune/Windows/Proactive%20Remediations/Disable%20Run%20Command
+https://github.com/bigjoestretch/powershell-toolkit/tree/main/Endpoint/Intune/Windows/ProactiveRemediations/Disable-RunCommand
 
 .ICONURI
 
@@ -30,7 +30,7 @@ This Microsoft Intune Proactive Remediation script will create a Windows registr
 
     
 .EXAMPLE
-.\Disable_Run_Command_RegistryKey_Remediation.ps1
+.\Remediate-RunCommandRegistryKey.ps1
 
 #>
 

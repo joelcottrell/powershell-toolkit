@@ -1,15 +1,15 @@
 <#	
 .NOTES
-	Name: netsh_multi_trace.ps1
+	Name: Start-NetshMultiTrace.ps1
 	Author: Joel Cottrell
 	Copyright: GPLv3
 	Tags: windows netsh
 
 .LICENSEURI
-https://github.com/bigjoestretch/public/blob/main/LICENSE
+https://github.com/bigjoestretch/powershell-toolkit/blob/main/LICENSE
 
 .PROJECTURI
-https://github.com/bigjoestretch/public/tree/main/Windows/Netsh
+https://github.com/bigjoestretch/powershell-toolkit/tree/main/Windows/Common/Netsh
 
 .ICONURI
 
