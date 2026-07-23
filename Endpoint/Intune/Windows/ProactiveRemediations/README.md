@@ -1,139 +1,106 @@
-# Proactive Remediations
+# Intune - Windows - Proactive Remediations
 
-Endpoint Analytics Proactive Remediations - Detection and Remediations scripts
+Endpoint Analytics proactive remediations: paired detection and remediation scripts.
 
-Proactive Remediations are Intune's take on ConfigMgr's Configuration Item/Baseline. They are PowerShell scripts that consist of a detection and remediation script. The detection script evaluates the current state and only runs the remediation script if it does not match the desired state.
+Proactive remediations are Intune's take on Configuration Manager's Configuration
+Item/Baseline. Each consists of a detection script that evaluates current state, and a
+remediation script that runs only when the device does not match the desired state.
 
-You can access Proactive Remediations in the [Microsoft Endpoint Manager](https://endpoint.microsoft.com/) portal.
+Find them in the [Microsoft Intune admin center](https://intune.microsoft.com/) under
+**Reports > Endpoint analytics > Proactive remediations**.
 
-Reports / Endpoint analytics / Proactive Remediations
+---
 
-## The Intune Custom Compliance Policy Repository
+## Project artifacts
 
-This repository contains detection/discovery scripts and JSON files for Microsoft Intune *Custom* comppliance scripts and policies. Each Custom compliance contains the following artifacts.
+Each remediation folder contains:
 
 | Artifact | Description |
-| ---------|-------------|
-| README.md | Description of the custom proactive remediation with references to the detection script and remediation script |
-| Detect-.ps1 | PowerShell detection script |
-| Remediate-.ps1 |  PowerShell detection script.|
+| --- | --- |
+| `README.md` | Description, Intune configuration, and desired state |
+| `Detect-*.ps1` | Detection script. Exit 0 when compliant, exit 1 to trigger remediation |
+| `Remediate-*.ps1` | Remediation script. Runs only when detection exits 1 |
 
-## Proactive Remediations
+`Detect-` and `Remediate-` are deliberate exceptions to the approved-verb rule; they mirror
+Intune's own vocabulary. See [naming conventions](../../../../docs/NAMING-CONVENTIONS.md).
+
+---
+
+## Projects
+
+| Project | Description |
+| --- | --- |
+| [Change-WinVerOEMInfo](./Change-WinVerOEMInfo/README.md) | Sets OEM support information and registered owner/organisation branding in the registry |
+| [Clear-MicrosoftAppsCache](./Clear-MicrosoftAppsCache/README.md) | Checks the ClickToRunSvc service and starts it when stopped |
+| [Create-LocalAdminAccount](./Create-LocalAdminAccount/README.md) | Detects and creates a local administrator account |
+| [Disable-RunCommand](./Disable-RunCommand/README.md) | Disables the Run command via registry policy |
+| [Disable-WindowsFastBoot](./Disable-WindowsFastBoot/README.md) | Detects and disables Windows Fast Boot (fast startup) |
+| [MicrosoftStore-ForcedAutoUpdate](./MicrosoftStore-ForcedAutoUpdate/README.md) | Forces application updates in the Microsoft Store |
+| [UninstallApp/Zscaler](./UninstallApp/Zscaler/README.md) | Detects and uninstalls the Zscaler application |
+| [WindowsUpdate/RemoveWUEntries](./WindowsUpdate/RemoveWUEntries/README.md) | Removes leftover Windows Update policy values from the policy key and both cache sets |
+
+---
+
+## Structure
 
 ```
-   |-Proactive Remediations
-   |---Change WinVer and OEM Info
-   |---Clear Microsoft Apps Cache
-   |---Create Local Admin Account
-   |---Disable Windows Fast Boot
-   |---Microsoft Store Forced Auto Update
-   |---Uninstall App
-   |------Zscaler
-   |---Windows Update
-   ```
+ProactiveRemediations/
+├── Change-WinVerOEMInfo/
+├── Clear-MicrosoftAppsCache/
+├── Create-LocalAdminAccount/
+├── Disable-RunCommand/
+├── Disable-WindowsFastBoot/
+├── MicrosoftStore-ForcedAutoUpdate/
+├── UninstallApp/
+│   └── Zscaler/
+├── WindowsUpdate/
+│   └── RemoveWUEntries/
+└── media/
+```
 
-## 1. Change WinVer and OEM Info
+---
 
-When moving to WUfB you may encounter a number of devices holding onto a setting to disable automatic updates which had been applied to a legacy GPO.
+## A note on the built-in ClickToRun remediation
 
-This proactive remediation will enable automatic updates if they are disabled
-
-Non-Compliant device look as follows:
-
-![AutoUpdateDisabled](images/AutoUpdateDisabled.png)
-
-Desired State:
-
-"HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU\NoAutoUpdate" = 0
-
-<br>
-
-## 2. Clear Microsoft Apps Cache
-
-This proactive remediation will check if the ClickToRunSvc service is running and if not, start it. It is based on the built-in proactive remediation by Microsoft, only with changes since I noticed the original is incorrectly coded. Here is an example of the incorrect code:
+`Clear-MicrosoftAppsCache` is based on Microsoft's built-in proactive remediation, with a
+correction. The original contains a bug:
 
 ```powershell
 $ctr = 0
 while ($curSvcStat -eq "Stopped") {
     Start-Sleep -Seconds 5
-    ctr++ # <-- problem here and below. Should be $ctr not ctr.
-    if (ctr -eq 12) {
+    ctr++              # <-- should be $ctr++
+    if (ctr -eq 12) {  # <-- should be $ctr
         Write-Output "Office C2R service could not be started after 60 seconds"
         exit 1
     }
 }
 ```
 
-The "$ctr" variable is later written simply as "ctr" (no $) which PowerShell will treat as a command/function and would have resulted in an "infinite loop" as $ctr will stay on 0.
+`ctr` without the `$` is parsed as a command, not a variable. `$ctr` never increments, the
+exit condition never fires, and the loop runs forever. The corrected version uses `$ctr`
+in both places.
 
-![ctrError](images/ctrError.png)
+---
 
-The corrected code looks as follows:
+## Shared prerequisites
 
-```powershell
-$ctr = 0
-while ($curSvcStat -eq "Stopped") {
-    Start-Sleep -Seconds 5
-    $ctr++
-    if ($ctr -eq 12) {
-        Write-Output "Office C2R service could not be started after 60 seconds"
-        exit 1
-    }
-}
-```
+| Requirement | Detail |
+| --- | --- |
+| PowerShell | 5.1 or later |
+| Context | SYSTEM by default; scripts requiring user context say so in their README |
+| Permissions | Intune Administrator to upload and assign |
 
-Another problem found with the Microsoft code. If $curSvcStat is set as "Stopped", it will always be stopped until the variable is updated by running the cmdlet again, which is isn't. So even if the service does start (Running) the variable will always be "Stopped"
+Run detection scripts in the 64-bit PowerShell host unless a project README says otherwise.
 
-```powershell
-while ($curSvcStat -eq "Stopped")
-```
+---
 
-Changed the code as follows:
+## Related
 
-```powershell
-while ((Get-Service $svcCur).Status -ne "Running")
-```
+- [Compliance](../Compliance/README.md) - custom compliance policies
+- [DeviceScripts](../DeviceScripts/README.md) - platform scripts that run once
+- [Win32Apps](../Win32Apps/README.md) - application packaging
 
-<br>
+---
 
-## 3. Create Local Admin Account
-
-The Office Click-to-Run updater tool is often always lagging behind on updates. This proactive remediation will check the registry for when the machine last checked for updates, and if more than 3 days ago, clear the reg key and start the Scheduled task.
-
-The UpdateDetectionLastRunTime key value is in LDAP/Win32 FILETIME which needs to be converted into date/time which is human readable. Can do this in PowerShell which I found from the link below
-
-https://www.epochconverter.com/ldap
-
-<br>
-
-## 4. Uninstall App - Zscaler
-
-When moving to WUfB you may encounter a number of devices holding onto a setting to disable automatic updates which had been applied to a legacy GPO.
-
-This proactive remediation will enable automatic updates if they are disabled
-
-Non-Compliant device look as follows:
-
-![AutoUpdateDisabled](images/AutoUpdateDisabled.png)
-
-Desired State:
-
-"HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU\NoAutoUpdate" = 0
-
-<br>
-
-## 5. Windows Update
-
-When moving to WUfB you may encounter a number of devices holding onto a setting to disable automatic updates which had been applied to a legacy GPO.
-
-This proactive remediation will enable automatic updates if they are disabled
-
-Non-Compliant device look as follows:
-
-![AutoUpdateDisabled](images/AutoUpdateDisabled.png)
-
-Desired State:
-
-"HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU\NoAutoUpdate" = 0
-
-<br>
+[Back to repository root](../../../../README.md)
