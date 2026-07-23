@@ -62,7 +62,7 @@ Start-Process -FilePath "C:\Program Files (x86)\Microsoft Intune Management Exte
 ```
 
 ![CustomCompliancePolicy](https://raw.githubusercontent.com/bigjoestretch/powershell-toolkit/main/Endpoint/Intune/Windows/Compliance/media/CompliancePolicyResult1.png)
-![CustomComplianceResult](https://raw.githubusercontent.com/bigjoestretch/powershell-toolkit/main/Endpoint/Intune/Windows/Compliance/media/CompliancePolicyResult1.png)
+![CustomComplianceResult](https://raw.githubusercontent.com/bigjoestretch/powershell-toolkit/main/Endpoint/Intune/Windows/Compliance/media/CompliancePolicyResult2.png)
 
 ## References
 

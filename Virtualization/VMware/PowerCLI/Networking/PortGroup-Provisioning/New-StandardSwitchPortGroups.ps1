@@ -538,7 +538,7 @@ try {
         Write-Progress `
             -Id 0 `
             -Activity 'Configuring standard networking on ESXi hosts' `
-            -Status "Host $HostIndex of $HostCount: $VMHostName" `
+            -Status "Host $HostIndex of ${HostCount}: $VMHostName" `
             -CurrentOperation "Beginning configuration of $VMHostName" `
             -PercentComplete ([math]::Round((($HostIndex - 1) / $HostCount) * 100))
 
@@ -694,7 +694,7 @@ try {
         Write-Progress `
             -Id 0 `
             -Activity 'Configuring standard networking on ESXi hosts' `
-            -Status "Completed host $HostIndex of $HostCount: $VMHostName" `
+            -Status "Completed host $HostIndex of ${HostCount}: $VMHostName" `
             -CurrentOperation "Completed configuration of $VMHostName" `
             -PercentComplete ([math]::Round(($HostIndex / $HostCount) * 100))
 

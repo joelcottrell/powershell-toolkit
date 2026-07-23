@@ -113,7 +113,8 @@ function Get-TimezoneAbbr {
     $isDST = $tz.IsDaylightSavingTime([DateTime]::Now)
     $fullName = if ($isDST) { $tz.DaylightName } else { $tz.StandardName }
 
-    return $tzMap[$fullName] ?? $fullName
+    if ($tzMap.ContainsKey($fullName)) { return $tzMap[$fullName] }
+    return $fullName
 }
 
 function Show-WelcomeMessage {
