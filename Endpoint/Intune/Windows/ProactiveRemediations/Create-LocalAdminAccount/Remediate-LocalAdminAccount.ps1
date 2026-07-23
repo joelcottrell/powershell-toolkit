@@ -8,10 +8,10 @@
 	Tags: intune endpoint MEM local admin
  
 .LICENSEURI
-https://github.com/bigjoestretch/powershell-toolkit/blob/main/LICENSE
+https://github.com/joelcottrell/powershell-toolkit/blob/main/LICENSE
 
 .PROJECTURI
-https://github.com/bigjoestretch/powershell-toolkit/tree/main/Endpoint/Intune/Windows/ProactiveRemediations/Create-LocalAdminAccount
+https://github.com/joelcottrell/powershell-toolkit/tree/main/Endpoint/Intune/Windows/ProactiveRemediations/Create-LocalAdminAccount
 
 .ICONURI
 

@@ -6,10 +6,10 @@
 	Tags: vsphere
 
 .LICENSEURI
-https://github.com/bigjoestretch/powershell-toolkit/blob/main/LICENSE
+https://github.com/joelcottrell/powershell-toolkit/blob/main/LICENSE
 
 .PROJECTURI
-https://github.com/bigjoestretch/powershell-toolkit/tree/main/Virtualization/VMware/PowerCLI/Authentication/Connect-ExternalIdentityProvider
+https://github.com/joelcottrell/powershell-toolkit/tree/main/Virtualization/VMware/PowerCLI/Authentication/Connect-ExternalIdentityProvider
 
 .ICONURI
 

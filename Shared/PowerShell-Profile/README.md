@@ -151,7 +151,7 @@ fails, your machine is likely blocking `raw.githubusercontent.com`.
 
 ## Author
 
-**Joel Cottrell** - [github.com/bigjoestretch](https://github.com/bigjoestretch)
+**Joel Cottrell** - [github.com/joelcottrell](https://github.com/joelcottrell)
 
 ---
 

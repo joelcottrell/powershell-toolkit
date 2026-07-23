@@ -52,7 +52,7 @@
     Version    : 2.0.0
     Requires   : PowerShell 5.1 or later
 
-    Repository : https://github.com/bigjoestretch/powershell-toolkit
+    Repository : https://github.com/joelcottrell/powershell-toolkit
 #>
 
 # ---------------------------------------------------------------------------
@@ -63,7 +63,7 @@
 # reviewed once stays what you reviewed.
 $ProfileRef = 'main'
 
-$ProfileSourceUrl = 'https://raw.githubusercontent.com/bigjoestretch/powershell-toolkit/{0}/Shared/PowerShell-Profile/Microsoft.PowerShell_profile.ps1'
+$ProfileSourceUrl = 'https://raw.githubusercontent.com/joelcottrell/powershell-toolkit/{0}/Shared/PowerShell-Profile/Microsoft.PowerShell_profile.ps1'
 
 # Once you have reviewed a version, paste its SHA256 here to refuse anything else.
 $ProfileExpectedSha256 = ''

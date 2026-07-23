@@ -13,7 +13,7 @@ powershell-toolkit/
 ## Upload through GitHub.com
 
 1. Extract the ZIP file locally.
-2. Open the root of the `bigjoestretch/powershell-toolkit` repository.
+2. Open the root of the `joelcottrell/powershell-toolkit` repository.
 3. Select **Add file**, then **Upload files**.
 4. Drag the extracted `VMWare` folder into the upload area.
 5. Confirm that GitHub shows the files under `VMWare/PowerCLI/Networking/PortGroup-Provisioning`.

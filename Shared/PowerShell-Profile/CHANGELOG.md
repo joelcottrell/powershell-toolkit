@@ -50,8 +50,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced PowerShell 7's null-coalescing operator (`??`) in the profile with an
   explicit `ContainsKey` check. It was a parse error under Windows PowerShell
   5.1, which the profile is expected to support.
-- Repointed the source URL from the retired `bigjoestretch/public` repository to
-  `bigjoestretch/powershell-toolkit`, and removed the percent-encoded path.
+- Repointed the source URL from the retired `joelcottrell/public` repository to
+  `joelcottrell/powershell-toolkit`, and removed the percent-encoded path.
 - Converted console output from emoji to ASCII status markers per the repository
   naming conventions.
 

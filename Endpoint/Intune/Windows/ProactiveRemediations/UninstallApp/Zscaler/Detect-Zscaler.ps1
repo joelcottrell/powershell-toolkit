@@ -9,10 +9,10 @@
 	Tags: intune endpoint MEM zscaler
  
 .LICENSEURI
-https://github.com/bigjoestretch/powershell-toolkit/blob/main/LICENSE
+https://github.com/joelcottrell/powershell-toolkit/blob/main/LICENSE
 
 .PROJECTURI
-https://github.com/bigjoestretch/powershell-toolkit/tree/main/Endpoint/Intune/Windows/ProactiveRemediations/UninstallApp/Zscaler
+https://github.com/joelcottrell/powershell-toolkit/tree/main/Endpoint/Intune/Windows/ProactiveRemediations/UninstallApp/Zscaler
 
 .ICONURI
 

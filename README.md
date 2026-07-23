@@ -1,7 +1,7 @@
 ![PowerShell](https://img.shields.io/badge/PowerShell-5391FE?style=for-the-badge&logo=powershell&logoColor=white)
-![License](https://img.shields.io/github/license/bigjoestretch/powershell-toolkit?style=for-the-badge)
-![GitHub last commit](https://img.shields.io/github/last-commit/bigjoestretch/powershell-toolkit?style=for-the-badge)
-![GitHub issues](https://img.shields.io/github/issues/bigjoestretch/powershell-toolkit?style=for-the-badge)
+![License](https://img.shields.io/github/license/joelcottrell/powershell-toolkit?style=for-the-badge)
+![GitHub last commit](https://img.shields.io/github/last-commit/joelcottrell/powershell-toolkit?style=for-the-badge)
+![GitHub issues](https://img.shields.io/github/issues/joelcottrell/powershell-toolkit?style=for-the-badge)
 
 # PowerShell Toolkit
 
@@ -63,7 +63,7 @@ Most scripts require:
 
 1. Clone or download this repository:
 ```powershell
-git clone https://github.com/bigjoestretch/powershell-toolkit.git
+git clone https://github.com/joelcottrell/powershell-toolkit.git
 ```
 
 2. Navigate to the appropriate folder for your task

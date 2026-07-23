@@ -6,10 +6,10 @@
 	Tags: intune endpoint MEM cisco umbrella
 
 .LICENSEURI
-https://github.com/bigjoestretch/powershell-toolkit/blob/main/LICENSE
+https://github.com/joelcottrell/powershell-toolkit/blob/main/LICENSE
 
 .PROJECTURI
-https://github.com/bigjoestretch/powershell-toolkit/tree/main/Endpoint/Intune/Windows/Compliance/Cisco-Umbrella
+https://github.com/joelcottrell/powershell-toolkit/tree/main/Endpoint/Intune/Windows/Compliance/Cisco-Umbrella
 
 .ICONURI
 

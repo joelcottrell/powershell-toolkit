@@ -6,10 +6,10 @@
 	Tags: intune endpoint MEM datto rmm
 
 .LICENSEURI
-https://github.com/bigjoestretch/powershell-toolkit/blob/main/LICENSE
+https://github.com/joelcottrell/powershell-toolkit/blob/main/LICENSE
 
 .PROJECTURI
-https://github.com/bigjoestretch/powershell-toolkit/tree/main/Endpoint/Intune/Windows/Win32Apps/Datto-RMM/Windows
+https://github.com/joelcottrell/powershell-toolkit/tree/main/Endpoint/Intune/Windows/Win32Apps/Datto-RMM/Windows
 
 .ICONURI
 
