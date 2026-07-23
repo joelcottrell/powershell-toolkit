@@ -141,6 +141,8 @@ New projects start from a skeleton in [`_Template/`](./_Template/README.md).
   no-spaces rule, approved verbs, and the two documented exceptions
 - [Project template guide](./docs/PROJECT-TEMPLATE.md) - tier selection, the mandatory
   script header, and what a project README owes its reader
+- [Development workflow](./docs/WORKFLOW.md) - the publish loop, working across two machines,
+  and why git (not OneDrive) is the sync layer
 
 Two rules are absolute: **no spaces in any path** (raw URLs percent-encode them and fail
 silently), and **no credentials or tenant identifiers in any script** - those become
