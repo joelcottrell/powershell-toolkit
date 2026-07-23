@@ -197,7 +197,7 @@ CSV CONFIGURATION REVIEW
 ==============================================================================
 
 I successfully read and validated the CSV file:
-  C:\GitHub\powershell-toolkit\VMWare\PowerCLI\Networking\
+  C:\GitHub\powershell-toolkit\Virtualization\VMware\PowerCLI\Networking\
   PortGroup-Provisioning\Config\portgroups.csv
 
 Configuration rows found : 3

@@ -8,7 +8,7 @@ This PowerCLI script allows you to authenticate with PowerCLI by using your Micr
 
 ## PowerCLI Entra ID authentication Script
 
-[powercli_entra_id_connect_vcenter](./powercli_entra_id_connect_vcenter.ps1)
+[Connect-ExternalIdentityProvider.ps1](./Connect-ExternalIdentityProvider.ps1)
 
 ## 🔧 Requirements:
 

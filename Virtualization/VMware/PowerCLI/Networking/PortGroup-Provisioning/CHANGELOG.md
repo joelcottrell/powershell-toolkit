@@ -2,6 +2,23 @@
 
 All notable changes to this project are documented here.
 
+## [1.5.0] - 2026-07-23
+
+### Changed
+
+- Relocated to `Virtualization/VMware/PowerCLI/Networking/PortGroup-Provisioning` as part
+  of the repository restructure, correcting the vendor casing from `VMWare` to `VMware`.
+  Raw URLs built on the previous path will no longer resolve; the pre-reorg state is
+  available at tag `v1.0-pre-reorg`.
+- Updated the repository URLs in both script headers following the GitHub account rename
+  from `bigjoestretch` to `joelcottrell`.
+
+### Fixed
+
+- `New-StandardSwitchPortGroups.ps1` interpolated the host counter directly before a colon
+  in two `Write-Progress` strings. PowerShell parses that as a scope qualifier, so the
+  script failed to parse under Windows PowerShell 5.1. Now delimited with braces.
+
 ## [1.4.0] - 2026-07-22
 
 ### Changed

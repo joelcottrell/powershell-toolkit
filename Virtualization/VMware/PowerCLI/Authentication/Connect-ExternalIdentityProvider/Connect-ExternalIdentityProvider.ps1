@@ -23,10 +23,10 @@ https://github.com/joelcottrell/powershell-toolkit/tree/main/Virtualization/VMwa
 v1.0 - 25/05/13 - Initial release of this script.
 	
 .SYNOPSIS
-Use VMWare PowerCLI with Microsoft Entra ID Federated vCenter Logins
+Use VMware PowerCLI with Microsoft Entra ID Federated vCenter Logins
 
 .DESCRIPTION
-This script allows you to use VMWare PowerCLI with Microsoft Entra ID Federated vCenter Logins.
+This script allows you to use VMware PowerCLI with Microsoft Entra ID Federated vCenter Logins.
 
 .EXAMPLE
 Example output:
