@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the former employer's name from the script filename, synopsis, and description.
 
 - Relocated from `Intune/Windows/Win32Apps/Datto RMM/Windows` to `Endpoint/Intune/Windows/Win32Apps/Datto-RMM/Windows` as part of the repository restructure. Raw URLs built on the previous path no longer resolve; the pre-reorg state is preserved at tag `v1.0-pre-reorg`.
-- Renamed `IntelyCare_Datto_RMM_Agent_Install-Vidal.ps1` to `Install-DattoRMMAgent.ps1` to match the approved `Verb-Noun` naming convention.
+- Renamed the install script to `Install-DattoRMMAgent.ps1` to match the approved `Verb-Noun` naming convention. The previous filename embedded a company name and a platform identifier, so it is not repeated here.
 - Renamed `Datto_RMM_Agent_Uninstall.cmd` to `Uninstall-DattoRMMAgent.cmd` to match the approved `Verb-Noun` naming convention.
 - Repointed the repository URLs in the script headers following the GitHub account rename from `bigjoestretch` to `joelcottrell`.
 
