@@ -1,0 +1,3 @@
+Name,Value,Description
+ExampleSetting,ExampleValue,What this setting controls
+SecondSetting,42,Numeric settings need no quoting

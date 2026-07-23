@@ -1,0 +1,42 @@
+# Logs
+# Logs/* rather than Logs/ so the tracked .gitkeep placeholder survives.
+# Git does not descend into an ignored directory, so a negation inside one
+# would never be evaluated.
+Logs/*
+!Logs/.gitkeep
+*.log
+
+# Timestamped script output
+*_[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]_[0-9][0-9][0-9][0-9][0-9][0-9].csv
+Output/
+Reports/
+
+# Live configuration (examples are tracked, working copies are not)
+Config/*.csv
+!Config/*.example.csv
+Config/*.json
+!Config/*.example.json
+
+# Credentials and secrets - never commit
+*.cred
+*.key
+*.pfx
+*.cer
+credentials.xml
+secrets.*
+
+# Editor and OS artifacts
+.vs/
+.vscode/
+*.suo
+*.user
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# PowerShell module output
+*.nupkg
+
+# Packaging artifacts and tooling binaries - build these, do not commit them
+*.intunewin
+*.exe
