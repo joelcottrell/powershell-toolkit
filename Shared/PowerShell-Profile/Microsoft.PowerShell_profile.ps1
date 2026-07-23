@@ -11,18 +11,18 @@ function Ensure-Module {
 
     if (-not $installed) {
         try {
-            Write-Host "📦 Installing module: $Name" -ForegroundColor Yellow
+            Write-Host "[PKG] Installing module: $Name" -ForegroundColor Yellow
             Install-Module -Name $Name -Repository $Repository -Scope CurrentUser -Force:$ForceInstall -AllowClobber -ErrorAction Stop -Confirm:$False
         } catch {
-            Write-Host "❌ Failed to install module: $Name" -ForegroundColor Red
+            Write-Host "[FAIL] Failed to install module: $Name" -ForegroundColor Red
             Write-Host $_.Exception.Message
         }
     } elseif ($online.Version -gt $installed.Version) {
         try {
-            Write-Host "🔄 Updating $Name from $($installed.Version) → $($online.Version)" -ForegroundColor Yellow
+            Write-Host "[UPDATE] Updating $Name from $($installed.Version) -> $($online.Version)" -ForegroundColor Yellow
             Update-Module -Name $Name -Force:$ForceInstall -ErrorAction Stop -Confirm:$False
         } catch {
-            Write-Host "❌ Failed to update module: $Name" -ForegroundColor Red
+            Write-Host "[FAIL] Failed to update module: $Name" -ForegroundColor Red
             Write-Host $_.Exception.Message
         }
     }
@@ -40,9 +40,9 @@ function Ensure-Module {
 
     try {
         Import-Module $Name -ErrorAction SilentlyContinue
-        Write-Host "✅ Module '$Name' loaded successfully." -ForegroundColor Green
+        Write-Host "[OK] Module '$Name' loaded successfully." -ForegroundColor Green
     } catch {
-        Write-Host "⚠️ Failed to import $Name." -ForegroundColor DarkYellow
+        Write-Host "[WARN] Failed to import $Name." -ForegroundColor DarkYellow
     }
 }
 
@@ -54,7 +54,7 @@ if (-not $global:SessionStartTime) {
 function Get-BatteryStatus {
     $battery = Get-CimInstance Win32_Battery
     if ($battery) {
-        return "$($battery.EstimatedChargeRemaining)% 🔋"
+        return "$($battery.EstimatedChargeRemaining)% BAT"
     }
     return ""
 }
@@ -62,23 +62,23 @@ function Get-BatteryStatus {
 function Get-CPULoad {
     $cpu = Get-Counter '\Processor(_Total)\% Processor Time'
     $usage = [math]::Round($cpu.CounterSamples[0].CookedValue, 1)
-    return "$usage% CPU 🔥"
+    return "$usage% CPU"
 }
 
 function Get-TimeIcon {
     $hour = (Get-Date).Hour
     switch ($hour) {
-        { $_ -lt 6 } { return "🌙" }
-        { $_ -lt 12 } { return "☀️" }
-        { $_ -lt 18 } { return "🌤️" }
-        default { return "🌆" }
+        { $_ -lt 6 } { return "(night)" }
+        { $_ -lt 12 } { return "(morning)" }
+        { $_ -lt 18 } { return "(afternoon)" }
+        default { return "(evening)" }
     }
 }
 
 function Get-RandomQuote {
     $quotes = @(
 		"Dream big. Start now."
-		"You’ve got this."
+		"You've got this."
 		"Be relentless."
 		"Make it happen."
 		"Create your future."
@@ -129,17 +129,17 @@ function Show-WelcomeMessage {
 	$name = "Joel" # Change this to your name
     switch ($hour) {
         { $_ -lt 12 } {
-            $greeting = "Good morning $name ☀️"
+            $greeting = "Good morning $name"
             $color = "Yellow"
             break
         }
         { $_ -lt 18 } {
-            $greeting = "Good afternoon $name 🌤️"
+            $greeting = "Good afternoon $name"
             $color = "Green"
             break
         }
         default {
-            $greeting = "Good evening $name 🌙"
+            $greeting = "Good evening $name"
             $color = "Cyan"
         }
     }
@@ -152,9 +152,9 @@ function Show-WelcomeMessage {
 	Write-Host "==========================================" -ForegroundColor DarkGray
 
     if ($ModulesToLoad.Count -gt 0) {
-        Write-Host "`n📦 Loading modules..." -ForegroundColor DarkCyan
+        Write-Host "`n[PKG] Loading modules..." -ForegroundColor DarkCyan
         foreach ($module in $ModulesToLoad) {
-            Write-Host "→ $module" -ForegroundColor DarkGray
+            Write-Host "-> $module" -ForegroundColor DarkGray
         }
     }
 }
@@ -174,12 +174,12 @@ function prompt {
     $folder = Split-Path $cwd -Leaf
 
     # Greeting and system info
-    Write-Host "`n$icon $date 📅 | [$time] ⏰ | PowerShell Console Uptime: $uptime ⏳" -ForegroundColor Green
+    Write-Host "`n$icon $date | [$time] | PowerShell Console Uptime: $uptime" -ForegroundColor Green
 
     # Prompt line with highlighted current folder
     $shortTime = $now.ToString("hh:mm:ss tt")
 	Write-Host "`n[$shortTime] " -NoNewline -ForegroundColor Red
-	Write-Host "❯ $base\" -NoNewline -ForegroundColor DarkGray
+	Write-Host "> $base\" -NoNewline -ForegroundColor DarkGray
     Write-Host "$folder>" -NoNewline -ForegroundColor Cyan
 
     return " "

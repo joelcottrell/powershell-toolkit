@@ -10,9 +10,9 @@ if (-not $env:PS_FAST_MODE) {
     try {
         Invoke-RestMethod -Uri $remoteProfile -OutFile $tempProfile -ErrorAction Stop
         . $tempProfile
-        Write-Host "✅ Remote PowerShell profile loaded from bigjoestretch's GitHub" -ForegroundColor Green
+        Write-Host "[OK] Remote PowerShell profile loaded from bigjoestretch's GitHub" -ForegroundColor Green
     }
     catch {
-        Write-Warning "⚠ Failed to load remote PowerShell profile: $_"
+        Write-Warning "[WARN] Failed to load remote PowerShell profile: $_"
     }
 }

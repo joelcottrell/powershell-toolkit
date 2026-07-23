@@ -6,10 +6,10 @@
 	Tags: vsphere
 
 .LICENSEURI
-https://github.com/bigjoestretch/public/blob/main/LICENSE
+https://github.com/bigjoestretch/powershell-toolkit/blob/main/LICENSE
 
 .PROJECTURI
-https://github.com/bigjoestretch/public/tree/main/VMWare/PowerCLI/Connect%20to%20External%20Identity%20Provider/Entra%20ID
+https://github.com/bigjoestretch/powershell-toolkit/tree/main/Virtualization/VMware/PowerCLI/Authentication/Connect-ExternalIdentityProvider
 
 .ICONURI
 
@@ -33,7 +33,7 @@ Example output:
 
 Name                           Port  User
 ----                           ----  ----
-test.testing.org               443   TESTING.ORG\test01…
+test.testing.org               443   TESTING.ORG\test01...
 
 #>
 
@@ -85,5 +85,5 @@ Connect-VIServer -Server '$vCenterServer' -SamlSecurityContext $samlSecContext
 
 Name                           Port  User
 ----                           ----  ----
-test.testing.org               443   TESTING.ORG\test01…
+test.testing.org               443   TESTING.ORG\test01...
 #>

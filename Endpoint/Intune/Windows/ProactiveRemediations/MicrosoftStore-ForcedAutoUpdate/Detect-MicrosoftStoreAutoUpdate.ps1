@@ -1,15 +1,15 @@
 <#	
 .NOTES
-	Name: Detect-Microsoft_Store_Auto_Update.ps1
+	Name: Detect-MicrosoftStoreAutoUpdate.ps1
 	Author: Joel Cottrell
 	Copyright: GPLv3
 	Tags: intune endpoint MEM microsoft store
 
 .LICENSEURI
-https://github.com/bigjoestretch/public/blob/main/LICENSE
+https://github.com/bigjoestretch/powershell-toolkit/blob/main/LICENSE
 
 .PROJECTURI
-https://github.com/bigjoestretch/public/tree/main/Intune/Windows/Proactive%20Remediations/Microsoft%20Store%20Forced%20Auto%20Update
+https://github.com/bigjoestretch/powershell-toolkit/tree/main/Endpoint/Intune/Windows/ProactiveRemediations/MicrosoftStore-ForcedAutoUpdate
 
 .ICONURI
 
@@ -31,11 +31,11 @@ This script forces app updates in the Microsoft Store using a proactive remediat
 Per: https://memv.ennbee.uk/posts/updating-windows-store-apps/
     
 .EXAMPLE
-.\Remediate-Microsoft_Store_Auto_Update.ps1
+.\Remediate-MicrosoftStoreAutoUpdate.ps1
 
 #>
 
-# Detect whether the result of the LastScanError (for the Microsoft Store app) is a zero or not, and if it’s not a zero throw an Exit 1 to allow a remediation to run.
+# Detect whether the result of the LastScanError (for the Microsoft Store app) is a zero or not, and if it's not a zero throw an Exit 1 to allow a remediation to run.
 
 try {
     $wmiObj = Get-CimInstance -Namespace "Root\cimv2\mdm\dmmap" -ClassName "MDM_EnterpriseModernAppManagement_AppManagement01"
