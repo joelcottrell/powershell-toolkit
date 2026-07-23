@@ -10,7 +10,9 @@ Windows workstation administration and user experience.
 
 ## Projects
 
-_No projects yet. This folder is scaffolded and awaiting content._
+| Project | Description | Tier |
+| --- | --- | --- |
+| [WSL](./WSL/README.md) | Install, remove, and toggle Windows Subsystem for Linux | 1 |
 
 New projects start from a skeleton in [`_Template/`](../../_Template/README.md).
 
