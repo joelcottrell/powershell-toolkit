@@ -1,15 +1,15 @@
 <#	
 .NOTES
-	Name: Detect-Cisco-Umbrella-v1.ps1 
+	Name: Detect-CiscoUmbrella.ps1 
 	Author: Joel Cottrell
 	Copyright: GPLv3
 	Tags: intune endpoint MEM cisco umbrella
 
 .LICENSEURI
-https://github.com/bigjoestretch/public/blob/main/LICENSE
+https://github.com/bigjoestretch/powershell-toolkit/blob/main/LICENSE
 
 .PROJECTURI
-https://github.com/bigjoestretch/public/blob/main/Intune/Windows/Compliance/Cisco%20Umbrella
+https://github.com/bigjoestretch/powershell-toolkit/tree/main/Endpoint/Intune/Windows/Compliance/Cisco-Umbrella
 
 .ICONURI
 
@@ -56,7 +56,7 @@ return $output | ConvertTo-Json -Compress
 #              { 
 #                 "Language": "en_US",
 #                 "Title": "The Cisco Secure Client service must be running. Value discovered was {ActualValue}.",
-#                 "Description": "Your device must have the Cisco Umbrella client running and enabled. Try restarting your device, and then follow the steps here: https://docs.umbrella.com/deployment-umbrella/docs/appx-c-troubleshooting. If you do this and get this message again, contact Corporate IT at itsupport@intelycare.com."
+#                 "Description": "Your device must have the Cisco Umbrella client running and enabled. Try restarting your device, and then follow the steps here: https://docs.umbrella.com/deployment-umbrella/docs/appx-c-troubleshooting. If you do this and get this message again, contact Corporate IT at itsupport@example.com."
 #              }
 #           ]
 #        },
@@ -70,7 +70,7 @@ return $output | ConvertTo-Json -Compress
 #            { 
 #               "Language": "en_US",
 #               "Title": "The Cisco Secure Client service startup must be set to Manual. Value discovered was {ActualValue}.",
-#               "Description": "Your device must have the Cisco Umbrella client running and enabled. Try restarting your device, and then follow the steps here: https://docs.umbrella.com/deployment-umbrella/docs/appx-c-troubleshooting. If you do this and get this message again, contact Corporate IT at itsupport@intelycare.com."
+#               "Description": "Your device must have the Cisco Umbrella client running and enabled. Try restarting your device, and then follow the steps here: https://docs.umbrella.com/deployment-umbrella/docs/appx-c-troubleshooting. If you do this and get this message again, contact Corporate IT at itsupport@example.com."
 #            }
 #         ]
 #      }

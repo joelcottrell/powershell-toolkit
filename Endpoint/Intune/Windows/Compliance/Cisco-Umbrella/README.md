@@ -8,11 +8,11 @@ N/A
 
 ## Intune Compliance Detection Script
 
-[Cisco Umbrella service](./Detect-Cisco-Umbrella.ps1)
+[Cisco Umbrella service](./Detect-CiscoUmbrella.ps1)
 
 ## Intune Compliance JSON
 
-[Cisco Umbrella service Compliance Policy](./Detect-Cisco-Umbrella.JSON)
+[Cisco Umbrella service Compliance Policy](./Detect-CiscoUmbrella.json)
 
 For compliance, the expected results are:
 

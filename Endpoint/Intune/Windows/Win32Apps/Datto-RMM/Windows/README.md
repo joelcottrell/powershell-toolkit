@@ -2,13 +2,25 @@
 
 This Intune Windows app (Win32) deploys the Kaseya Datto RMM application to assigned users/devices in Microsoft Intune (formerlly Microsoft Endpoint)
 
+## Required parameters
+
+The install script takes two tenant-specific values. Supply your own before packaging:
+
+| Parameter | Where to find it |
+| --- | --- |
+| `-Platform` | The subdomain of your Datto RMM portal URL, `https://<platform>.rmm.datto.com` |
+| `-SiteID` | The GUID of the target site, under **Sites > &lt;your site&gt; > Settings** |
+
+> The SiteID is the only token needed to download an agent installer bound to your site.
+> Treat it as a secret and keep live values out of source control.
+
 ## Intune Windows app (Win32) Configuration
 Below are the settings configured under the ***Program*** section of the app configuration:
 
 | Description | Value |
 | --- | --- |
-| Install command | **powershell.exe -ExecutionPolicy Bypass -File [IntelyCare_Datto_RMM_Agent_Install-Vidal.ps1](./IntelyCare_Datto_RMM_Agent_Install-Vidal.ps1)** |
-| Uninstall command | **[Datto_RMM_Agent_Uninstall.cmd](./Datto_RMM_Agent_Uninstall.cmd)** |
+| Install command | **powershell.exe -ExecutionPolicy Bypass -File [Install-DattoRMMAgent.ps1](./Install-DattoRMMAgent.ps1) -Platform "&lt;platform&gt;" -SiteID "&lt;site-guid&gt;"** |
+| Uninstall command | **[Uninstall-DattoRMMAgent.cmd](./Uninstall-DattoRMMAgent.cmd)** |
 | Installation time required (mins) | **60** |
 | Allow available uninstall | **Yes** |
 | Install behavior | **System** |

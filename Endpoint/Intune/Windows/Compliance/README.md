@@ -61,8 +61,8 @@ Now wait for the Compliance policy to be processed on the client. Run the follow
 Start-Process -FilePath "C:\Program Files (x86)\Microsoft Intune Management Extension\Microsoft.Management.Services.IntuneWindowsAgent.exe" -ArgumentList intunemanagementextension://synccompliance
 ```
 
-![CustomCompliancePolicy](https://github.com/bigjoestretch/public/blob/main/Intune/Windows/Compliance/media/CompliancePolicyResult1.png?raw=true)
-![CustomComplianceResult](https://github.com/bigjoestretch/public/blob/main/Intune/Windows/Compliance/media/CompliancePolicyResult1.png?raw=true)
+![CustomCompliancePolicy](https://raw.githubusercontent.com/bigjoestretch/powershell-toolkit/main/Endpoint/Intune/Windows/Compliance/media/CompliancePolicyResult1.png)
+![CustomComplianceResult](https://raw.githubusercontent.com/bigjoestretch/powershell-toolkit/main/Endpoint/Intune/Windows/Compliance/media/CompliancePolicyResult1.png)
 
 ## References
 

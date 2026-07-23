@@ -1,6 +1,6 @@
 <#  
 .NOTES  
-    Name: Remediate-WinVer-OEM.ps1  
+    Name: Remediate-WinVerOEMInfo.ps1  
     Author: Niklas Rast
     Modified by: Joel Cottrell  
     Requires: PowerShell v5 
@@ -8,10 +8,10 @@
 	Tags: intune endpoint MEM winver oem
  
 .LICENSEURI
-https://github.com/bigjoestretch/public/blob/main/LICENSE
+https://github.com/bigjoestretch/powershell-toolkit/blob/main/LICENSE
 
 .PROJECTURI
-https://github.com/bigjoestretch/public/blob/main/Intune/Windows/Proactive%20Remediations
+https://github.com/bigjoestretch/powershell-toolkit/tree/main/Endpoint/Intune/Windows/ProactiveRemediations/Change-WinVerOEMInfo
 
 .ICONURI
 
@@ -35,19 +35,19 @@ v1.0 - 23/12/11 - Initial release of this script.
     https://niklasrast.com/2023/10/05/elevate-your-corporate-branding-on-managed-windows-devices-with-microsoft-intune-remediations/
 
 .EXAMPLE
-Remediate-WinVer-OEM.ps1
+Remediate-WinVerOEMInfo.ps1
 
 #>
 
 # Customize the following registry entries with your own info.
 $BrandingContent = @"
 RegKeyPath,Key,Value
-"HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation","SupportURL","https://advizex.service-now.com/"
+"HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation","SupportURL","https://support.example.com/"
 "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation","Manufacturer","Lenovo"
 "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation","SupportHours","Standard: 8AM - 5PM EST"
-"HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation","SupportPhone","(617) 715-3774"
-"HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion","RegisteredOwner","IntelyCare"
-"HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion","RegisteredOrganization","IntelyCare"
+"HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation","SupportPhone","(555) 555-0100"
+"HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion","RegisteredOwner","Contoso"
+"HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion","RegisteredOrganization","Contoso"
 "@
 
 $Branding = $BrandingContent | ConvertFrom-Csv -delimiter ","

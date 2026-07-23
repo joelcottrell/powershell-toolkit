@@ -10,7 +10,7 @@
               { 
                  "Language":"en_US",
                  "Title":"The ZScaler Client Connector service is not running.",
-                 "Description": "Your device must have the ZScaler Client Connector running and enabled. Try restarting your device, and then follow the steps here: https://help.zscaler.com/client-connector/using-zscaler-client-connector. If you do this and get this message again, contact Corporate IT at itsupport@intelycare.com."
+                 "Description": "Your device must have the ZScaler Client Connector running and enabled. Try restarting your device, and then follow the steps here: https://help.zscaler.com/client-connector/using-zscaler-client-connector. If you do this and get this message again, contact Corporate IT at itsupport@example.com."
               }
            ]
         }

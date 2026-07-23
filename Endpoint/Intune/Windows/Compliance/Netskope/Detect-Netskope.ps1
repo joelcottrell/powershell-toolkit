@@ -6,10 +6,10 @@
 	Tags: intune endpoint MEM netskope
 
 .LICENSEURI
-https://github.com/bigjoestretch/public/blob/main/LICENSE
+https://github.com/bigjoestretch/powershell-toolkit/blob/main/LICENSE
 
 .PROJECTURI
-https://github.com/bigjoestretch/public/blob/main/Intune/Windows/Compliance/Netskope
+https://github.com/bigjoestretch/powershell-toolkit/tree/main/Endpoint/Intune/Windows/Compliance/Netskope
 
 .ICONURI
 
@@ -56,7 +56,7 @@ return $output | ConvertTo-Json -Compress
 #              { 
 #                 "Language": "en_US",
 #                 "Title": "The Netskope client service must be running. Value discovered was {ActualValue}.",
-#                 "Description": "Your device must have the Netskope client service running and enabled. Try restarting your device, and then follow the steps here: https://docs.netskope.com/en/netskope-client-troubleshooting-guide/. If you do this and get this message again, contact Corporate IT at itsupport@intelycare.com."
+#                 "Description": "Your device must have the Netskope client service running and enabled. Try restarting your device, and then follow the steps here: https://docs.netskope.com/en/netskope-client-troubleshooting-guide/. If you do this and get this message again, contact Corporate IT at itsupport@example.com."
 #              }
 #           ]
 #        },
@@ -70,7 +70,7 @@ return $output | ConvertTo-Json -Compress
 #            { 
 #               "Language": "en_US",
 #               "Title": "The Netskope client service startup must be set to Automatic. Value discovered was {ActualValue}.",
-#               "Description": "Your device must have the Netskope client service startup set to Automatic. Try restarting your device, and then follow the steps here: https://docs.netskope.com/en/netskope-client-troubleshooting-guide/. If you do this and get this message again, contact Corporate IT at itsupport@intelycare.com."
+#               "Description": "Your device must have the Netskope client service startup set to Automatic. Try restarting your device, and then follow the steps here: https://docs.netskope.com/en/netskope-client-troubleshooting-guide/. If you do this and get this message again, contact Corporate IT at itsupport@example.com."
 #            }
 #         ]
 #      }

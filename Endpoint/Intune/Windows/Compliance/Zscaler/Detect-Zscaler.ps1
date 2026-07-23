@@ -7,10 +7,10 @@
 	Tags: intune endpoint MEM zscaler
 
 .LICENSEURI
-https://github.com/bigjoestretch/public/blob/main/LICENSE
+https://github.com/bigjoestretch/powershell-toolkit/blob/main/LICENSE
 
 .PROJECTURI
-https://github.com/bigjoestretch/public/blob/main/Intune/Windows/Compliance/Zscaler
+https://github.com/bigjoestretch/powershell-toolkit/tree/main/Endpoint/Intune/Windows/Compliance/Zscaler
 
 .ICONURI
 
@@ -64,7 +64,7 @@ return $ZScalerStatus | ConvertTo-Json -Compress
 #              { 
 #                 "Language":"en_US",
 #                 "Title":"The ZScaler Client Connector service is not running.",
-#                 "Description": "Your device must have the ZScaler Client Connector running and enabled. Try restarting your device, and then follow the steps here: https://help.zscaler.com/client-connector/using-zscaler-client-connector. If you do this and get this message again, contact Corporate IT at itsupport@intelycare.com."
+#                 "Description": "Your device must have the ZScaler Client Connector running and enabled. Try restarting your device, and then follow the steps here: https://help.zscaler.com/client-connector/using-zscaler-client-connector. If you do this and get this message again, contact Corporate IT at itsupport@example.com."
 #              }
 #           ]
 #        }

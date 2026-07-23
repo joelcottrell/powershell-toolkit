@@ -1,15 +1,15 @@
 <#	
 .NOTES
-	Name: IntelyCare_Datto_RMM_Agent_Install-Vidal.ps1
+	Name: Install-DattoRMMAgent.ps1
 	Author: Joel Cottrell
 	Copyright: GPLv3
 	Tags: intune endpoint MEM datto rmm
 
 .LICENSEURI
-https://github.com/bigjoestretch/public/blob/main/LICENSE
+https://github.com/bigjoestretch/powershell-toolkit/blob/main/LICENSE
 
 .PROJECTURI
-https://github.com/bigjoestretch/public/tree/main/Intune/Windows/Win32Apps/Datto%20RMM
+https://github.com/bigjoestretch/powershell-toolkit/tree/main/Endpoint/Intune/Windows/Win32Apps/Datto-RMM/Windows
 
 .ICONURI
 
@@ -23,20 +23,42 @@ https://github.com/bigjoestretch/public/tree/main/Intune/Windows/Win32Apps/Datto
 v1.0 - 24/10/09 - Initial release of this script.
 	
 .SYNOPSIS
-Powershell script to install the Datto RMM agentonto a Windows device
+Powershell script to install the Datto RMM agent onto a Windows device
 
 .DESCRIPTION
-This script deploys the Kaseya Datto RMM agent to Windows devices pre-configured with IntelyCare's Datto RMM platform
-name (vidal) as well as IntelyCare's SiteID (f7aa7b18-5a02-47b2-8e45-7eaa43ee15ec)
-(found under 'https://vidal.rmm.datto.com/site/86495/us-managed/settings') - for the "US-Managed" site in Datto RMM).
-    
+This script deploys the Kaseya Datto RMM agent to Windows devices, pre-configured with your Datto RMM
+platform name and the SiteID of the target site.
+
+Both values are specific to your own tenant and must be supplied before use:
+
+    Platform - the subdomain of your Datto RMM instance. Visible in the portal URL,
+               for example 'https://<platform>.rmm.datto.com'.
+    SiteID   - the GUID of the target site. Found in the portal under
+               Sites > <your site> > Settings.
+
+Treat the SiteID as a secret. It is the only token required to download an agent
+installer bound to your site, so do not commit a live value to source control.
+
+.PARAMETER Platform
+The Datto RMM platform subdomain for your tenant.
+
+.PARAMETER SiteID
+The GUID of the Datto RMM site the device should enroll into.
+
 .EXAMPLE
-.\IntelyCare_Datto_RMM_Agent_Install-Vidal.ps1
+.\Install-DattoRMMAgent.ps1 -Platform "contoso" -SiteID "00000000-0000-0000-0000-000000000000"
 
 #>
 
-$Platform="vidal"
-$SiteID="f7aa7b18-5a02-47b2-8e45-7eaa43ee15ec" 
+param(
+    [Parameter(Mandatory = $true)]
+    [string]$Platform,
+
+    [Parameter(Mandatory = $true)]
+    [ValidatePattern('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$')]
+    [string]$SiteID
+)
+
 <# 
 Datto RMM Agent deploy by MS Azure Intune 
 Designed and written by Jon North, Datto, March 2020 
