@@ -18,6 +18,9 @@ The project is intended for cases where an approved local exception must remain 
 - Supports audit-only testing before installation.
 - Writes rotating logs and a JSON status heartbeat.
 - Keeps configuration separate from code.
+- Adds optional WinGet application maintenance as a separate short-lived scheduled task.
+- Supports WinGet upgrade-all and allow-list modes with exclusions.
+- Excludes Microsoft.PowerShell from automated WinGet updates by default.
 
 ---
 
@@ -30,6 +33,7 @@ Windows/
         |-- Config/
         |   |-- config.example.json
         |-- Docs/
+        |   |-- AppUpdate-Maintenance.md
         |   |-- Operational-Notes.md
         |   |-- Reference.md
         |-- Tests/
@@ -40,6 +44,10 @@ Windows/
         |-- Start-DesktopPolicyGuard.ps1
         |-- Remove-DesktopPolicyGuardService.ps1
         |-- Test-DesktopPolicyGuard.ps1
+        |-- Install-AppUpdateMaintenance.ps1
+        |-- Start-AppUpdateMaintenance.ps1
+        |-- Remove-AppUpdateMaintenance.ps1
+        |-- Test-AppUpdateMaintenance.ps1
         |-- README.md
         |-- CHANGELOG.md
         |-- .gitignore
@@ -76,11 +84,52 @@ Preview installation:
 
 The audit helper runs one pass with RunOnce and AuditOnly, so it does not change registry values or remove shortcuts.
 
+## App Update Maintenance
+
+The application updater is intentionally separate from the LocalSystem policy service. The WinGet CLI is not supported in LocalSystem context, so the updater runs as a short-lived scheduled task under the administrator account that installs it.
+
+Test WinGet first:
+
+~~~powershell
+winget --version
+winget source update
+winget upgrade
+~~~
+
+Then run the project audit:
+
+~~~powershell
+.\Test-AppUpdateMaintenance.ps1
+~~~
+
+Install daily maintenance from an elevated PowerShell 7 session:
+
+~~~powershell
+.\Install-AppUpdateMaintenance.ps1 -Enable -Mode All -StartNow
+~~~
+
+Use an existing Task Scheduler folder when desired:
+
+~~~powershell
+.\Install-AppUpdateMaintenance.ps1 `
+    -TaskPath '\BCH-IT\' `
+    -Enable `
+    -Mode All `
+    -StartNow
+~~~
+
+The task launches hidden, performs maintenance, writes a report, and exits. It does not leave a persistent PowerShell or Windows Terminal window running.
+
+All mode uses winget upgrade --all. Package IDs in ExcludedPackages are pinned first so WinGet skips them. AllowList mode updates only IDs listed in Packages.
+
+Microsoft.PowerShell is excluded in the tracked example because WinGet can report a newer release while refusing an in-place upgrade when installer technologies differ.
+
+---
 ## Configuration
 
 The tracked example is Config/config.example.json. Copy it to Config/config.json for a working repository-local configuration. Config/config.json is ignored by git.
 
-Shortcut deletion is disabled by default.
+Shortcut deletion and App Update Maintenance are disabled by default. The App Update Maintenance installer adds the AppUpdates section automatically when upgrading an older installed configuration.
 
 ## Installed layout
 
@@ -89,8 +138,10 @@ C:\ProgramData\DesktopPolicy-Guard\
 |-- DesktopPolicyGuard.exe
 |-- DesktopPolicyGuard.xml
 |-- Start-DesktopPolicyGuard.ps1
+|-- Start-AppUpdateMaintenance.ps1
 |-- config.json
 |-- Logs\
+|   |-- AppUpdateMaintenance\
 |-- Status\
     |-- status.json
 ~~~
@@ -126,12 +177,18 @@ To also delete installed files and runtime data:
 - Shortcut deletion is disabled in the tracked example configuration.
 - No WinSW executable is committed to the repository.
 - Registry writes are verified after enforcement.
+- App Update Maintenance has a separate audit-only mode.
+- App updates are disabled in the tracked example configuration.
+- Microsoft.PowerShell is excluded from automated app updates by default.
+- The app maintenance task uses StartWhenAvailable and a four-hour execution limit.
 
 ## Scope notes
 
 This project deliberately does not change GPO, Intune, or Edge-management configuration; determine which central policy is responsible for drift; load offline user hives; guarantee access to network-redirected Desktop folders; store credentials or tenant-specific identifiers; or bundle executable binaries.
 
 Only currently loaded user hives are processed.
+
+WinGet package behavior is controlled by each package manifest and installer. Test important applications individually before enabling broad unattended updates.
 
 ## Testing
 
@@ -141,6 +198,7 @@ Invoke-Pester .\Tests\DesktopPolicy-Guard.Tests.ps1
 
 ## Documentation
 
+- [App Update Maintenance](./Docs/AppUpdate-Maintenance.md)
 - [Operational Notes](./Docs/Operational-Notes.md)
 - [Configuration Reference](./Docs/Reference.md)
 - [Changelog](./CHANGELOG.md)
