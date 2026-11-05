@@ -1,0 +1,41 @@
+{
+  "CheckIntervalSeconds": 15,
+  "LogMaxSizeMB": 5,
+  "LogRetentionCount": 10,
+  "RemoveShortcuts": false,
+  "ShortcutNames": [],
+  "MachineRegistry": [
+    {
+      "Path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Edge",
+      "Name": "SyncDisabled",
+      "Type": "DWord",
+      "Value": 0
+    },
+    {
+      "Path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\System",
+      "Name": "AllowCrossDeviceClipboard",
+      "Type": "DWord",
+      "Value": 1
+    },
+    {
+      "Path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\System",
+      "Name": "AllowClipboardHistory",
+      "Type": "DWord",
+      "Value": 1
+    }
+  ],
+  "UserRegistry": [
+    {
+      "RelativePath": "Software\\Microsoft\\Clipboard",
+      "Name": "EnableCloudClipboard",
+      "Type": "DWord",
+      "Value": 1
+    },
+    {
+      "RelativePath": "Software\\Microsoft\\Clipboard",
+      "Name": "CloudClipboardAutomaticUpload",
+      "Type": "DWord",
+      "Value": 1
+    }
+  ]
+}
