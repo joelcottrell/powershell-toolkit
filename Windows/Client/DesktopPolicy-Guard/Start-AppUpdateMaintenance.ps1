@@ -45,6 +45,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 $RunId = Get-Date -Format 'yyyyMMdd-HHmmss'
+$NoApplicableUpdateExitCode = -1978335189
 $LogRoot = Join-Path -Path $PSScriptRoot -ChildPath 'Logs\AppUpdateMaintenance'
 $LogFile = Join-Path -Path $LogRoot -ChildPath "AppUpdateMaintenance-$RunId.log"
 $ReportFile = Join-Path -Path $LogRoot -ChildPath "AppUpdateMaintenance-$RunId.json"
@@ -226,7 +227,10 @@ elseif ($mode -eq 'All') {
         Write-AppUpdateLog -Level 'INFO' -Message $line
     }
 
-    if ($updateResult.ExitCode -ne 0) {
+    if ($updateResult.ExitCode -eq $NoApplicableUpdateExitCode) {
+        Write-AppUpdateLog -Level 'INFO' -Message 'No applicable WinGet updates were found.'
+    }
+    elseif ($updateResult.ExitCode -ne 0) {
         $failed = $true
         Write-AppUpdateLog -Level 'ERROR' -Message "winget upgrade --all exited with code $($updateResult.ExitCode)."
     }
@@ -271,14 +275,25 @@ elseif ($mode -eq 'AllowList') {
             Write-AppUpdateLog -Level 'INFO' -Message "[$packageId] $line"
         }
 
-        if ($updateResult.ExitCode -ne 0) {
+        $status = 'Updated'
+
+        if ($updateResult.ExitCode -eq $NoApplicableUpdateExitCode) {
+            $status = 'Current'
+            Write-AppUpdateLog -Level 'INFO' -Message "Package '$packageId' is already current."
+        }
+        elseif ($updateResult.ExitCode -ne 0) {
+            $status = 'Failed'
             $failed = $true
             Write-AppUpdateLog -Level 'ERROR' -Message "Package '$packageId' exited with code $($updateResult.ExitCode)."
+        }
+        else {
+            Write-AppUpdateLog -Level 'SUCCESS' -Message "Updated package: $packageId"
         }
 
         $results.Add([pscustomobject]@{
             Action    = 'UpgradePackage'
             PackageId = [string]$packageId
+            Status    = $status
             ExitCode  = $updateResult.ExitCode
             Output    = $updateResult.Output
         })
