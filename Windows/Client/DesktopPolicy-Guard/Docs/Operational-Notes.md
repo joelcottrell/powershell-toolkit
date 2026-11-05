@@ -62,3 +62,38 @@ Re-running the installer replaces the service script and wrapper configuration b
 Run Remove-DesktopPolicyGuardService.ps1. Add -RemoveInstalledFiles to remove the installed files as well.
 
 Removing the service does not restore prior registry values or deleted shortcuts.
+## App Update Maintenance model
+
+WinGet maintenance is deliberately not hosted inside the LocalSystem Windows service.
+
+winget.exe is delivered through App Installer and is not supported in LocalSystem context. The maintenance task therefore runs in the user context of the administrator who installs it, with highest privileges, and exits after each run.
+
+This avoids a persistent interactive PowerShell process while preserving access to the same WinGet package inventory that was validated manually.
+
+Default task path:
+
+    \DesktopPolicy-Guard\App Update Maintenance
+
+The task path is configurable. Existing Task Scheduler folders such as \BCH-IT\ can be selected during installation.
+
+### Scheduling
+
+The task runs daily, uses StartWhenAvailable, ignores duplicate starts, and has a four-hour execution limit.
+
+### Exclusions and pins
+
+In All mode, ExcludedPackages are ensured as WinGet pins before winget upgrade --all. A normal WinGet pin prevents the package from participating in upgrade-all while still allowing a deliberate targeted upgrade outside this automation.
+
+The uninstaller does not remove pins automatically.
+
+### PowerShell
+
+Microsoft.PowerShell is excluded by default because WinGet can identify a newer release while refusing an in-place upgrade when the installed and available package use different installer technologies. Remove the exclusion only after a direct upgrade path is tested successfully.
+
+### App update logs
+
+Each run writes:
+
+    C:\ProgramData\DesktopPolicy-Guard\Logs\AppUpdateMaintenance\AppUpdateMaintenance-<timestamp>.log
+    C:\ProgramData\DesktopPolicy-Guard\Logs\AppUpdateMaintenance\AppUpdateMaintenance-<timestamp>.json
+
