@@ -26,7 +26,7 @@ environments, shared freely with the IT community.
 | **Microsoft365** | Exchange, SharePoint, Teams, Tenant | Workload and tenant administration | [Browse](./Microsoft365/README.md) |
 | **Azure** | Automation | Runbooks and cloud automation | [Browse](./Azure/README.md) |
 
-**32 scripts across 20 projects.** Coverage is uneven by design - `Endpoint/` is the most
+**36 scripts across 21 projects.** Coverage is uneven by design - `Endpoint/` is the most
 developed, while `Identity/`, `Microsoft365/`, and `Azure/` are scaffolded and awaiting
 content. Empty category folders are deliberate structure, not abandonment.
 
