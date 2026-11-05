@@ -1,0 +1,21 @@
+# Working configuration
+Config/*.json
+!Config/*.example.json
+
+# Runtime output
+Logs/*
+!Logs/.gitkeep
+Status/
+Output/
+Reports/
+*.log
+
+# Service wrapper / binaries
+*.exe
+*.dll
+
+# Credentials and certificates
+*.cred
+*.key
+*.pfx
+*.cer
