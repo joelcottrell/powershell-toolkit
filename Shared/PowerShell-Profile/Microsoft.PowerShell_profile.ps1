@@ -1,5 +1,5 @@
 # Ensure a module is installed, updated if needed, and imported
-function Ensure-Module {
+function global:Ensure-Module {
     param (
         [Parameter(Mandatory = $true)][string]$Name,
         [string]$Repository = "PSGallery",
@@ -7,7 +7,8 @@ function Ensure-Module {
     )
 
     $installed = Get-Module -ListAvailable -Name $Name | Sort-Object Version -Descending | Select-Object -First 1
-    $online = Find-Module -Name $Name -Repository $Repository -ErrorAction SilentlyContinue
+    # Module update checks are intentionally excluded from interactive startup.
+    $online = $null
 
     if (-not $installed) {
         try {
@@ -17,7 +18,7 @@ function Ensure-Module {
             Write-Host "[FAIL] Failed to install module: $Name" -ForegroundColor Red
             Write-Host $_.Exception.Message
         }
-    } elseif ($online.Version -gt $installed.Version) {
+    } elseif ($false -and $online.Version -gt $installed.Version) {
         try {
             Write-Host "[UPDATE] Updating $Name from $($installed.Version) -> $($online.Version)" -ForegroundColor Yellow
             Update-Module -Name $Name -Force:$ForceInstall -ErrorAction Stop -Confirm:$False
@@ -28,8 +29,8 @@ function Ensure-Module {
     }
 
 <#	if ($Name -eq "VMware.PowerCLI") {
-        Set-PowerCLIConfiguration -Scope User -ParticipateInCEIP $false -Confirm:$false -ErrorAction SilentlyContinue | Out-Null
-        Set-PowerCLIConfiguration -Scope User -InvalidCertificateAction Ignore -Confirm:$false -ErrorAction SilentlyContinue | Out-Null
+        # Leave persistent PowerCLI settings to explicit administration.
+        # Do not disable TLS certificate verification during profile initialization.
     }
 #>
 
@@ -39,10 +40,10 @@ function Ensure-Module {
     }
 
     try {
-        Import-Module $Name -ErrorAction SilentlyContinue
+        Import-Module $Name -ErrorAction Stop
         Write-Host "[OK] Module '$Name' loaded successfully." -ForegroundColor Green
     } catch {
-        Write-Host "[WARN] Failed to import $Name." -ForegroundColor DarkYellow
+        Write-Warning "Failed to import $Name: $($_.Exception.Message)" -ForegroundColor DarkYellow
     }
 }
 
@@ -51,7 +52,7 @@ if (-not $global:SessionStartTime) {
     $global:SessionStartTime = Get-Date
 }
 
-function Get-BatteryStatus {
+function global:Get-BatteryStatus {
     $battery = Get-CimInstance Win32_Battery
     if ($battery) {
         return "$($battery.EstimatedChargeRemaining)% BAT"
@@ -59,13 +60,13 @@ function Get-BatteryStatus {
     return ""
 }
 
-function Get-CPULoad {
+function global:Get-CPULoad {
     $cpu = Get-Counter '\Processor(_Total)\% Processor Time'
     $usage = [math]::Round($cpu.CounterSamples[0].CookedValue, 1)
     return "$usage% CPU"
 }
 
-function Get-TimeIcon {
+function global:Get-TimeIcon {
     $hour = (Get-Date).Hour
     switch ($hour) {
         { $_ -lt 6 } { return "(night)" }
@@ -75,7 +76,7 @@ function Get-TimeIcon {
     }
 }
 
-function Get-RandomQuote {
+function global:Get-RandomQuote {
     $quotes = @(
 		"Dream big. Start now."
 		"You've got this."
@@ -91,12 +92,12 @@ function Get-RandomQuote {
     return $quotes | Get-Random
 }
 
-function Get-SessionUptime() {
+function global:Get-SessionUptime () {
     $elapsed = (Get-Date) - $global:SessionStartTime
     return "{0}m" -f [math]::Floor($elapsed.TotalMinutes)
 }
 
-function Get-TimezoneAbbr {
+function global:Get-TimezoneAbbr {
     # Map known timezone names to abbreviations (expand as needed)
     $tzMap = @{
         "Pacific Standard Time" = "PST"
@@ -117,7 +118,7 @@ function Get-TimezoneAbbr {
     return $fullName
 }
 
-function Show-WelcomeMessage {
+function global:Show-WelcomeMessage {
     param (
         [string[]]$ModulesToLoad = @()
     )
@@ -160,14 +161,15 @@ function Show-WelcomeMessage {
     }
 }
 
-function prompt {
+function global:prompt {
     $now = Get-Date
     $time = $now.ToString("hh:mm:ss tt")
     $date = $now.ToString("MM/dd/yyyy")
     $tz = Get-TimezoneAbbr
     $uptime = Get-SessionUptime
-    $battery = Get-BatteryStatus
-    $cpu = Get-CPULoad
+    $battery = $null
+    # CPU polling on every prompt is expensive; omit unless explicitly requested.
+    $cpu = $null
     $icon = Get-TimeIcon
     $user = $env:USERNAME
     $cwd = (Get-Location).Path
@@ -191,7 +193,12 @@ $RequiredModules = @("VCF.PowerCLI")  # Add any other modules you want, e.g. (, 
 # Show welcome message with module list
 Show-WelcomeMessage -ModulesToLoad $RequiredModules
 
-# Load all modules
+# Import installed modules only. Module installation/update is a separate admin task.
 foreach ($mod in $RequiredModules) {
-    Ensure-Module -Name $mod
+    if (Get-Module -ListAvailable -Name $mod) {
+        try { Import-Module -Name $mod -ErrorAction Stop; Write-Host "[OK] $mod loaded." -ForegroundColor Green }
+        catch { Write-Warning "Failed to import $mod: $($_.Exception.Message)" }
+    } else {
+        Write-Warning "$mod is not installed. Install it explicitly when needed."
+    }
 }

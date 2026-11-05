@@ -1,3 +1,13 @@
+
+## 2.1.0 - 2026-11-05
+- Added local/full interactive startup selector with local as default.
+- Added on-demand `Load-FullProfile` and profile health reporting.
+- Added minimal local profile and backup-first installer.
+- Added direct-from-GitHub installer with syntax checks, SHA256 display and optional hash pinning.
+- Kept explicit reviewed profile cache updates; no automatic network fetch at startup.
+- Removed automatic module version lookups and updates from full-profile startup.
+- Preserved full-profile functions when activated on demand.
+
 # Changelog
 
 All notable changes to the PowerShell Profile project are documented here.

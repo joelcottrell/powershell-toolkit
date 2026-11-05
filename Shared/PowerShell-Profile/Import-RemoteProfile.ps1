@@ -1,191 +1,104 @@
 <#
 .SYNOPSIS
-    Loads a locally cached PowerShell profile and refreshes it only when asked.
-
+    Interactive, cached PowerShell profile selector.
 .DESCRIPTION
-    Bootstrap for your $PROFILE. Place the contents of this file in your profile
-    (see README.md) to load a centrally managed profile across machines.
-
-    The previous version of this script downloaded a profile from GitHub and
-    dot-sourced it on every shell start. That gave every new PowerShell session
-    the contents of a URL, tracking a moving branch, with no integrity check and
-    no confirmation. Anyone who gained control of that path - a compromised
-    account, or simply someone claiming a released username - would get code
-    execution in every shell on every machine running the profile.
-
-    This version closes that:
-
-      - Shell start performs no network access at all. It dot-sources a local
-        cached copy and nothing else.
-      - Refreshing is explicit: you run Update-PowerShellProfile when you want
-        new code, so remote changes never arrive silently.
-      - Updates can be pinned to a tag or commit SHA rather than a branch, so a
-        later force-push cannot change what you already reviewed.
-      - The downloaded content is hashed and shown to you, and can be checked
-        against an expected SHA256 before it is installed.
-      - Installation is atomic, into your own profile directory, rather than
-        staged through a predictable path in the shared temp directory.
-
-    Trust model: you are trusting the code at the moment you run
-    Update-PowerShellProfile, not on every shell start. Review what changed,
-    then install it.
-
-.PARAMETER Ref
-    Branch, tag, or commit SHA to fetch from. Prefer a tag or SHA. Defaults to
-    the value of $ProfileRef below.
-
-.PARAMETER ExpectedSha256
-    If supplied, the download is installed only when its SHA256 matches. Pin
-    this once you have reviewed a known-good version.
-
-.EXAMPLE
-    Update-PowerShellProfile
-    Fetches the profile, shows its SHA256, and asks before installing.
-
-.EXAMPLE
-    Update-PowerShellProfile -Ref 'v1.1' -ExpectedSha256 'ABC123...' -Force
-    Non-interactive update pinned to a tag, installed only on hash match.
-
+    Loads the lightweight local profile by default, or a previously reviewed
+    GitHub-managed profile from the local cache. Never downloads on startup.
 .NOTES
-    File Name  : Import-RemoteProfile.ps1
-    Author     : Joel Cottrell
-    Version    : 2.0.0
-    Requires   : PowerShell 5.1 or later
-
-    Repository : https://github.com/joelcottrell/powershell-toolkit
+    File Name : Import-RemoteProfile.ps1
+    Author    : Joel Cottrell
+    Version   : 2.1.0
+    Changelog :
+      2.1.0 - Add local/full startup selection and on-demand full loading.
+      2.0.0 - Add explicit, verified cached profile updates.
+.EXAMPLE
+    Load-FullProfile
 #>
+$script:ProfileRef = 'main'
+$script:ProfileSourceUrl = 'https://raw.githubusercontent.com/joelcottrell/powershell-toolkit/{0}/Shared/PowerShell-Profile/Microsoft.PowerShell_profile.ps1'
+$script:ProfileExpectedSha256 = ''
+$script:ProfileDirectory = Split-Path -Parent $PROFILE
+$script:ProfileCacheDir = Join-Path $script:ProfileDirectory 'RemoteProfile'
+$script:ProfileCachePath = Join-Path $script:ProfileCacheDir 'Microsoft.PowerShell_profile.ps1'
+$script:LocalProfilePath = Join-Path $script:ProfileDirectory 'Local-Profile.ps1'
+$global:ProfileHealth = [ordered]@{ Mode='Local'; RemoteDownload=$false; SyntaxValid=$false; LoadedRemote=$false; UsedFallback=$false; Error=$null }
 
-# ---------------------------------------------------------------------------
-# Configuration
-# ---------------------------------------------------------------------------
-
-# Prefer a tag or commit SHA over 'main'. A branch can change under you; a tag
-# reviewed once stays what you reviewed.
-$ProfileRef = 'main'
-
-$ProfileSourceUrl = 'https://raw.githubusercontent.com/joelcottrell/powershell-toolkit/{0}/Shared/PowerShell-Profile/Microsoft.PowerShell_profile.ps1'
-
-# Once you have reviewed a version, paste its SHA256 here to refuse anything else.
-$ProfileExpectedSha256 = ''
-
-$ProfileCacheDir  = Join-Path (Split-Path -Parent $PROFILE) 'RemoteProfile'
-$ProfileCachePath = Join-Path $ProfileCacheDir 'Microsoft.PowerShell_profile.ps1'
-
-# ---------------------------------------------------------------------------
-# Update command - run this deliberately, not automatically
-# ---------------------------------------------------------------------------
-
-function Update-PowerShellProfile {
-    [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
-    param(
-        [string]$Ref = $ProfileRef,
-        [string]$ExpectedSha256 = $ProfileExpectedSha256,
-        [switch]$Force
-    )
-
-    $url = $ProfileSourceUrl -f $Ref
-
-    if ($Ref -eq 'main' -and -not $ExpectedSha256) {
-        Write-Warning "Fetching from branch '$Ref' with no expected hash. Pin a tag or SHA256 for repeatable updates."
-    }
-
-    # Windows PowerShell 5.1 may still default to TLS 1.0/1.1, which GitHub rejects.
-    try {
-        [Net.ServicePointManager]::SecurityProtocol =
-            [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
-    } catch {
-        Write-Verbose "Could not raise TLS version: $_"
-    }
-
-    Write-Host "Fetching profile from $url" -ForegroundColor Cyan
-
-    try {
-        $response = Invoke-WebRequest -Uri $url -UseBasicParsing -ErrorAction Stop
-    } catch {
-        Write-Error "Download failed: $_"
-        return
-    }
-
-    $content = $response.Content
-    if ([string]::IsNullOrWhiteSpace($content)) {
-        Write-Error "Downloaded profile was empty. Nothing installed."
-        return
-    }
-
-    # Hash the exact bytes that would be installed.
-    $bytes = [System.Text.Encoding]::UTF8.GetBytes($content)
-    $sha   = [System.Security.Cryptography.SHA256]::Create()
-    try {
-        $hash = ($sha.ComputeHash($bytes) | ForEach-Object { $_.ToString('x2') }) -join ''
-    } finally {
-        $sha.Dispose()
-    }
-
-    Write-Host "SHA256: $hash" -ForegroundColor Yellow
-
-    if ($ExpectedSha256) {
-        if ($hash -ne $ExpectedSha256.ToLowerInvariant()) {
-            Write-Error "Hash mismatch. Expected $ExpectedSha256 but got $hash. Nothing installed."
-            return
-        }
-        Write-Host "Hash matches the pinned value." -ForegroundColor Green
-    }
-
-    if (-not (Test-Path -LiteralPath $ProfileCacheDir)) {
-        New-Item -Path $ProfileCacheDir -ItemType Directory -Force | Out-Null
-    }
-
-    # Show what is changing before it is trusted.
-    if ((Test-Path -LiteralPath $ProfileCachePath) -and -not $Force) {
-        $currentHash = Get-PowerShellProfileHash
-        if ($currentHash -eq $hash) {
-            Write-Host "Already up to date. Nothing to do." -ForegroundColor Green
-            return
-        }
-        Write-Host "This will replace your cached profile (current SHA256: $currentHash)." -ForegroundColor Yellow
-        Write-Host "Review the source at $url before continuing." -ForegroundColor Yellow
-    }
-
-    if (-not ($Force -or $PSCmdlet.ShouldProcess($ProfileCachePath, "Install updated PowerShell profile"))) {
-        Write-Host "Cancelled. Nothing installed." -ForegroundColor DarkYellow
-        return
-    }
-
-    # Write to a temporary file in the destination directory, then move into
-    # place, so a failure part-way through cannot leave a truncated profile.
-    $staging = Join-Path $ProfileCacheDir ([System.IO.Path]::GetRandomFileName())
-    try {
-        [System.IO.File]::WriteAllText($staging, $content, (New-Object System.Text.UTF8Encoding($false)))
-        Move-Item -LiteralPath $staging -Destination $ProfileCachePath -Force
-        Write-Host "[OK] Profile updated at $ProfileCachePath" -ForegroundColor Green
-        Write-Host "Restart PowerShell, or run: . `$PROFILE" -ForegroundColor DarkGray
-    } catch {
-        Write-Error "Install failed: $_"
-        if (Test-Path -LiteralPath $staging) { Remove-Item -LiteralPath $staging -Force -ErrorAction SilentlyContinue }
-    }
+function Test-ProfileSyntax {
+    param([Parameter(Mandatory)][string]$Path)
+    $tokens = $null; $parseErrors = $null
+    $null = [System.Management.Automation.Language.Parser]::ParseFile($Path,[ref]$tokens,[ref]$parseErrors)
+    return ($parseErrors.Count -eq 0)
 }
-
 function Get-PowerShellProfileHash {
     [CmdletBinding()]
-    param([string]$Path = $ProfileCachePath)
-
-    if (-not (Test-Path -LiteralPath $Path)) { return $null }
-    return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+    param([string]$Path = $script:ProfileCachePath)
+    if (Test-Path -LiteralPath $Path) { (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant() }
 }
-
-# ---------------------------------------------------------------------------
-# Shell start - local only, no network
-# ---------------------------------------------------------------------------
-
-if (-not $env:PS_SKIP_PROFILE) {
-    if (Test-Path -LiteralPath $ProfileCachePath) {
-        try {
-            . $ProfileCachePath
-        } catch {
-            Write-Warning "[WARN] Cached profile failed to load: $_"
-            Write-Warning "Loaded a bare session. Fix or re-run Update-PowerShellProfile."
+function Update-PowerShellProfile {
+    [CmdletBinding(SupportsShouldProcess=$true,ConfirmImpact='High')]
+    param([string]$Ref=$script:ProfileRef,[string]$ExpectedSha256=$script:ProfileExpectedSha256,[switch]$Force)
+    $url = $script:ProfileSourceUrl -f $Ref
+    if ($Ref -eq 'main' -and -not $ExpectedSha256) {
+        Write-Warning 'Using a moving branch without an expected hash. Prefer a reviewed commit SHA and expected hash.'
+    }
+    $directory = $script:ProfileCacheDir
+    New-Item -ItemType Directory -Path $directory -Force -ErrorAction Stop | Out-Null
+    $staging = Join-Path $directory ([IO.Path]::GetRandomFileName() + '.ps1')
+    try {
+        Invoke-WebRequest -Uri $url -OutFile $staging -ErrorAction Stop
+        if (-not (Test-ProfileSyntax -Path $staging)) { throw 'Downloaded profile has PowerShell syntax errors.' }
+        $hash = (Get-FileHash -LiteralPath $staging -Algorithm SHA256).Hash.ToLowerInvariant()
+        Write-Host "Downloaded SHA256: $hash"
+        if ($ExpectedSha256 -and $hash -ne $ExpectedSha256.ToLowerInvariant()) { throw 'Expected SHA256 does not match downloaded content.' }
+        if (-not $Force -and (Get-PowerShellProfileHash) -eq $hash) { Write-Host 'Profile already current.'; return }
+        Write-Host "Review source before installing: $url" -ForegroundColor Yellow
+        if ($Force -or $PSCmdlet.ShouldProcess($script:ProfileCachePath,'Replace cached PowerShell profile')) {
+            Move-Item -LiteralPath $staging -Destination $script:ProfileCachePath -Force -ErrorAction Stop
+            Write-Host 'Cached profile updated. Run Load-FullProfile when ready.' -ForegroundColor Green
         }
-    } else {
-        Write-Host "No cached profile found. Run Update-PowerShellProfile to install one." -ForegroundColor DarkYellow
+    } catch { Write-Warning "Profile update failed: $($_.Exception.Message)" }
+    finally { if (Test-Path -LiteralPath $staging) { Remove-Item -LiteralPath $staging -Force -ErrorAction SilentlyContinue } }
+}
+function Load-LocalProfile {
+    $global:ProfileHealth.Mode = 'Local'
+    if (Test-Path -LiteralPath $script:LocalProfilePath) {
+        . $script:LocalProfilePath
     }
 }
+function Load-FullProfile {
+    [CmdletBinding()]
+    param()
+    if ($global:ProfileHealth.LoadedRemote) { Write-Host 'Full profile already loaded.'; return }
+    try {
+        if (-not (Test-Path -LiteralPath $script:ProfileCachePath)) { throw 'No cached full profile. Run Update-PowerShellProfile to install a reviewed copy.' }
+        if (-not (Test-ProfileSyntax -Path $script:ProfileCachePath)) { throw 'Cached profile failed syntax validation.' }
+        $global:ProfileHealth.SyntaxValid = $true
+        . $script:ProfileCachePath
+        $global:ProfileHealth.LoadedRemote = $true
+        $global:ProfileHealth.Mode = 'Full (cached GitHub)'
+        Write-Host 'Full cached PowerShell profile loaded.' -ForegroundColor Green
+    } catch {
+        $global:ProfileHealth.Error = $_.Exception.Message
+        $global:ProfileHealth.UsedFallback = $true
+        Write-Warning "Full profile unavailable: $($_.Exception.Message)"
+        Load-LocalProfile
+    }
+}
+function Show-ProfileHealth {
+    [CmdletBinding()]
+    param()
+    [pscustomobject]$global:ProfileHealth | Format-List
+}
+function Start-PowerShellProfile {
+    if ($env:PS_SKIP_PROFILE -eq '1' -or $env:PS_PROFILE_MODE -eq 'local') { Load-LocalProfile; return }
+    if ($env:PS_PROFILE_MODE -eq 'full') { Load-FullProfile; return }
+    # Avoid blocking automation, redirected stdin, or nested sessions.
+    if (-not [Environment]::UserInteractive -or [Console]::IsInputRedirected -or $Host.Name -ne 'ConsoleHost') {
+        Load-LocalProfile; return
+    }
+    try {
+        $choice = Read-Host 'Load local PowerShell profile? [Y/n]'
+        if ($choice -match '^(?i:n|no)$') { Load-FullProfile } else { Load-LocalProfile }
+    } catch { Load-LocalProfile }
+}
+Start-PowerShellProfile

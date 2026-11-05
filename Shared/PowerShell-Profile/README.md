@@ -156,3 +156,48 @@ fails, your machine is likely blocking `raw.githubusercontent.com`.
 ---
 
 [Back to repository root](../../README.md)
+
+
+## Interactive profile selector (v2.1.0)
+
+Startup defaults to a lightweight local profile. At an interactive PowerShell ConsoleHost prompt:
+
+- **Y** or **Enter**: lightweight local profile, no VCF.PowerCLI import.
+- **N**: load the previously reviewed cached GitHub-managed profile, including installed VCF.PowerCLI.
+- **Load-FullProfile**: activate the cached full profile later in the same session.
+- **Show-ProfileHealth**: inspect current session profile state.
+- **Update-PowerShellProfile**: explicitly download, syntax-check, hash, and confirm a cache replacement. Use `-Ref <commit-sha> -ExpectedSha256 <hash>` for pinning. Do not blindly approve code changes.
+
+### Installation
+
+1. Download or clone this folder to a local working directory, then review the scripts.
+2. Open PowerShell 7 and run `.\\Install-PowerShellProfile.ps1 -WhatIf` from that folder to preview the installation.
+3. Run `.\\Install-PowerShellProfile.ps1` and confirm the action. The installer backs up the current `$PROFILE` with a timestamp before replacing it.
+4. Restart PowerShell. Choose **Y** to test local startup.
+5. After reviewing the remote full profile, run `Update-PowerShellProfile` to create the local cache. Restart and choose **N**, or run `Load-FullProfile`.
+
+**Important:** The installer is designed for the current `$PROFILE` path, which varies between PowerShell 7 and Windows PowerShell 5.1. Do not run the installer directly from a remote URL. A full profile cache is not bundled with the installer. A first-time **N** selection falls back to local until a cache is explicitly installed.
+
+### Automation
+
+Use `pwsh -NoProfile` for scripts that must not load a user profile. For hosts that do load profiles, set `PS_PROFILE_MODE=local` to bypass the prompt. `PS_PROFILE_MODE=full` explicitly loads the cached full profile. `PS_SKIP_PROFILE=1` skips full-profile loading. Noninteractive and redirected-input ConsoleHost sessions default to local.
+
+### Performance and security
+
+Full profile startup no longer runs `Find-Module` or `Update-Module`, and it does not change persistent PowerCLI certificate verification settings. Module installation and upgrades should be performed explicitly. The full profile is still responsible for importing an already installed VCF.PowerCLI module, so full mode can take longer than local mode. The cache is syntax-checked at load time, but syntax checking is **not** an authenticity guarantee: review and pin remote updates before trusting them.
+
+### Install directly from GitHub without a repository checkout
+
+After the feature is merged and reviewed, use PowerShell 7 to download only the installer to a temporary location:
+
+```powershell
+$installer = Join-Path $env:TEMP 'Install-FromGitHub.ps1'
+Invoke-WebRequest 'https://raw.githubusercontent.com/joelcottrell/powershell-toolkit/main/Shared/PowerShell-Profile/Install-FromGitHub.ps1' -OutFile $installer
+notepad $installer  # Review before executing
+& $installer -Ref main -WhatIf
+& $installer -Ref main
+```
+
+The installer downloads the two necessary profile files from GitHub, validates PowerShell syntax, prints SHA256 hashes, and asks for confirmation before backing up and replacing the local profile files. Prefer passing `-BootstrapSha256` and `-LocalSha256` from a trusted reviewed release, and pin `-Ref` to a commit SHA for stronger reproducibility. This is **not** an unattended or automatic update mechanism. The installer does not download or execute the full VCF profile; use `Update-PowerShellProfile` separately to review and cache it.
+
+Do not delete the existing extracted feature-branch directory until installation and both startup modes have been verified.
