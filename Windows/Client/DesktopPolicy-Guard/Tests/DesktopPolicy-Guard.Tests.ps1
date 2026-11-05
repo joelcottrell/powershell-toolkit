@@ -12,6 +12,10 @@ BeforeAll {
         'Start-DesktopPolicyGuard.ps1'
         'Remove-DesktopPolicyGuardService.ps1'
         'Test-DesktopPolicyGuard.ps1'
+        'Install-AppUpdateMaintenance.ps1'
+        'Start-AppUpdateMaintenance.ps1'
+        'Remove-AppUpdateMaintenance.ps1'
+        'Test-AppUpdateMaintenance.ps1'
     )
     $script:ConfigPath = Join-Path $script:ProjectRoot 'Config\config.example.json'
 }
@@ -59,6 +63,21 @@ Describe 'DesktopPolicy-Guard static validation' {
         It 'ships with shortcut removal disabled' {
             $config = Get-Content -LiteralPath $script:ConfigPath -Raw | ConvertFrom-Json
             $config.RemoveShortcuts | Should -BeFalse
+        }
+
+        It 'ships with app updates disabled' {
+            $config = Get-Content -LiteralPath $script:ConfigPath -Raw | ConvertFrom-Json
+            $config.AppUpdates.Enabled | Should -BeFalse
+        }
+
+        It 'excludes PowerShell from automated updates by default' {
+            $config = Get-Content -LiteralPath $script:ConfigPath -Raw | ConvertFrom-Json
+            @($config.AppUpdates.ExcludedPackages) | Should -Contain 'Microsoft.PowerShell'
+        }
+
+        It 'uses a supported app update mode' {
+            $config = Get-Content -LiteralPath $script:ConfigPath -Raw | ConvertFrom-Json
+            $config.AppUpdates.Mode | Should -BeIn @('All', 'AllowList')
         }
     }
 }
