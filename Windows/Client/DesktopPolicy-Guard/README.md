@@ -112,7 +112,7 @@ Use an existing Task Scheduler folder when desired:
 
 ~~~powershell
 .\Install-AppUpdateMaintenance.ps1 `
-    -TaskPath '\BCH-IT\' `
+    -TaskPath '\IT-Automation\' `
     -Enable `
     -Mode All `
     -StartNow
