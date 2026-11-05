@@ -6,6 +6,30 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 
 ---
 
+## [1.1.0] - 2026-11-05
+
+### Added
+
+- Separate WinGet App Update Maintenance workload.
+- Daily hidden scheduled-task installer for PowerShell 7.
+- Upgrade-all and allow-list update modes.
+- WinGet exclusion handling through package pins.
+- Audit-only app update testing.
+- Per-run text logging and JSON maintenance reports.
+- App Update Maintenance operational documentation.
+
+### Changed
+
+- Extended config.example.json with an AppUpdates section.
+- Microsoft.PowerShell is excluded from automated upgrades by default.
+- Project documentation and Pester coverage now include application maintenance.
+
+### Design
+
+- Kept WinGet maintenance separate from the LocalSystem policy service because winget.exe is not supported in LocalSystem context.
+- App maintenance runs as a short-lived task and exits after each maintenance pass.
+
+---
 ## [1.0.0] - 2026-11-05
 
 ### Added
