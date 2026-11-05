@@ -99,6 +99,21 @@ function Ensure-ExcludedPackagePin {
         [string]$Id
     )
 
+    $installedCheck = Invoke-WinGet -Arguments @(
+        'list',
+        '--id', $Id,
+        '--exact',
+        '--accept-source-agreements',
+        '--disable-interactivity'
+    )
+
+    $isInstalled = ($installedCheck.Output -join [Environment]::NewLine) -match [regex]::Escape($Id)
+
+    if (-not $isInstalled) {
+        Write-AppUpdateLog -Level 'INFO' -Message "Excluded package is not installed; no pin required: $Id"
+        return
+    }
+
     $pinList = Invoke-WinGet -Arguments @(
         'pin', 'list',
         '--id', $Id,
