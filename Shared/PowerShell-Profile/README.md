@@ -201,3 +201,11 @@ notepad $installer  # Review before executing
 The installer downloads the two necessary profile files from GitHub, validates PowerShell syntax, prints SHA256 hashes, and asks for confirmation before backing up and replacing the local profile files. Prefer passing `-BootstrapSha256` and `-LocalSha256` from a trusted reviewed release, and pin `-Ref` to a commit SHA for stronger reproducibility. This is **not** an unattended or automatic update mechanism. The installer does not download or execute the full VCF profile; use `Update-PowerShellProfile` separately to review and cache it.
 
 Do not delete the existing extracted feature-branch directory until installation and both startup modes have been verified.
+
+## Infrastructure module selection and automatic updates (v2.2.0)
+
+Choose **N** at the initial startup prompt to load the cached full GitHub profile. Then choose **1** for VMware VCF.PowerCLI, **2** for the modern Nutanix v4 SDK modules `Nutanix.Prism` and `Nutanix.Vmm`, **3** for both, or **4/Enter** for none. Only selected modules are checked or imported. `Load-VCF` and `Load-Nutanix` work on demand.
+
+A successful PSGallery check is recorded per module in `$env:LOCALAPPDATA\PowerShellProfile\module-state.json`. A new check runs after 24 hours; newer stable releases install automatically side by side. Missing modules prompt before installation. Failures do not advance the timestamp. No automatic Authenticode publisher-check bypass or persistent PowerCLI configuration changes occur. An update to an already loaded module may require restarting PowerShell to activate the new assembly version. Nutanix v4 modules are published separately, and this profile starts with Prism and VMM; additional SDK modules can be added as needed.
+
+To activate the new functionality on an already installed Profile Manager, run `Update-PowerShellProfile` and then start a fresh PowerShell session, choose **N**, and select the module set. Local startup stays fast.

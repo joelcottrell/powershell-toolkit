@@ -1,4 +1,10 @@
 
+## 2.2.0 - 2026-11-05
+- Add VMware/Nutanix/Both/None full-profile selection.
+- Add per-module daily PSGallery checks and automatic stable updates.
+- Prompt before first installation of missing modules.
+- Retain previous versions and report assembly-related restart requirements.
+
 ## 2.1.0 - 2026-11-05
 - Added local/full interactive startup selector with local as default.
 - Added on-demand `Load-FullProfile` and profile health reporting.
