@@ -37,7 +37,7 @@
     .\Install-AppUpdateMaintenance.ps1 -Enable -Mode All -StartNow
 
 .EXAMPLE
-    .\Install-AppUpdateMaintenance.ps1 -TaskPath '\BCH-IT\' -Enable -StartNow
+    .\Install-AppUpdateMaintenance.ps1 -TaskPath '\IT-Automation\' -Enable -StartNow
 
 .NOTES
     File Name  : Install-AppUpdateMaintenance.ps1
