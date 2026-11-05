@@ -35,15 +35,14 @@ function global:Ensure-Module {
 #>
 
 	if ($Name -eq "VCF.PowerCLI") {
-        Set-PowerCLIConfiguration -Scope User -ParticipateInCEIP $false -Confirm:$false -ErrorAction SilentlyContinue | Out-Null
-        Set-PowerCLIConfiguration -Scope User -InvalidCertificateAction Ignore -Confirm:$false -ErrorAction SilentlyContinue | Out-Null
+        # PowerCLI configuration is intentionally not changed at startup.
     }
 
     try {
         Import-Module $Name -ErrorAction Stop
         Write-Host "[OK] Module '$Name' loaded successfully." -ForegroundColor Green
     } catch {
-        Write-Warning "Failed to import $Name: $($_.Exception.Message)" -ForegroundColor DarkYellow
+        Write-Warning "Failed to import ${Name}: $($_.Exception.Message)"
     }
 }
 
@@ -197,7 +196,7 @@ Show-WelcomeMessage -ModulesToLoad $RequiredModules
 foreach ($mod in $RequiredModules) {
     if (Get-Module -ListAvailable -Name $mod) {
         try { Import-Module -Name $mod -ErrorAction Stop; Write-Host "[OK] $mod loaded." -ForegroundColor Green }
-        catch { Write-Warning "Failed to import $mod: $($_.Exception.Message)" }
+        catch { Write-Warning "Failed to import ${mod}: $($_.Exception.Message)" }
     } else {
         Write-Warning "$mod is not installed. Install it explicitly when needed."
     }
