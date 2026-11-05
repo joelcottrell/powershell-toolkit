@@ -185,3 +185,19 @@ Use `pwsh -NoProfile` for scripts that must not load a user profile. For hosts t
 ### Performance and security
 
 Full profile startup no longer runs `Find-Module` or `Update-Module`, and it does not change persistent PowerCLI certificate verification settings. Module installation and upgrades should be performed explicitly. The full profile is still responsible for importing an already installed VCF.PowerCLI module, so full mode can take longer than local mode. The cache is syntax-checked at load time, but syntax checking is **not** an authenticity guarantee: review and pin remote updates before trusting them.
+
+### Install directly from GitHub without a repository checkout
+
+After the feature is merged and reviewed, use PowerShell 7 to download only the installer to a temporary location:
+
+```powershell
+$installer = Join-Path $env:TEMP 'Install-FromGitHub.ps1'
+Invoke-WebRequest 'https://raw.githubusercontent.com/joelcottrell/powershell-toolkit/main/Shared/PowerShell-Profile/Install-FromGitHub.ps1' -OutFile $installer
+notepad $installer  # Review before executing
+& $installer -Ref main -WhatIf
+& $installer -Ref main
+```
+
+The installer downloads the two necessary profile files from GitHub, validates PowerShell syntax, prints SHA256 hashes, and asks for confirmation before backing up and replacing the local profile files. Prefer passing `-BootstrapSha256` and `-LocalSha256` from a trusted reviewed release, and pin `-Ref` to a commit SHA for stronger reproducibility. This is **not** an unattended or automatic update mechanism. The installer does not download or execute the full VCF profile; use `Update-PowerShellProfile` separately to review and cache it.
+
+Do not delete the existing extracted feature-branch directory until installation and both startup modes have been verified.
