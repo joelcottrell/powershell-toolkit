@@ -53,7 +53,7 @@ Example:
 
 To place the task in an existing Task Scheduler folder:
 
-    .\Install-AppUpdateMaintenance.ps1 -TaskPath '\BCH-IT\' -Enable -Mode All -StartNow
+    .\Install-AppUpdateMaintenance.ps1 -TaskPath '\IT-Automation\' -Enable -Mode All -StartNow
 
 ## Logs
 
