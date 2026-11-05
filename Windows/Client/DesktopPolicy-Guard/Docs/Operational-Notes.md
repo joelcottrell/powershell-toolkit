@@ -74,7 +74,7 @@ Default task path:
 
     \DesktopPolicy-Guard\App Update Maintenance
 
-The task path is configurable. Existing Task Scheduler folders such as \BCH-IT\ can be selected during installation.
+The task path is configurable. Existing Task Scheduler folders such as \IT-Automation\ can be selected during installation.
 
 ### Scheduling
 
