@@ -149,9 +149,13 @@ if ($null -eq $config.AppUpdates) {
 
 $appConfig = $config.AppUpdates
 
-if (-not [bool]$appConfig.Enabled) {
+if (-not [bool]$appConfig.Enabled -and -not $AuditOnly) {
     Write-Host 'App Update Maintenance is disabled in configuration.'
     exit 0
+}
+
+if (-not [bool]$appConfig.Enabled -and $AuditOnly) {
+    Write-AppUpdateLog -Level 'AUDIT' -Message 'AppUpdates.Enabled is false; continuing because AuditOnly was requested.'
 }
 
 New-Item -Path $LogRoot -ItemType Directory -Force | Out-Null
