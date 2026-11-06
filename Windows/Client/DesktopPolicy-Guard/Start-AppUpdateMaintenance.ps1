@@ -25,8 +25,8 @@
 .NOTES
     File Name  : Start-AppUpdateMaintenance.ps1
     Author     : Joel Cottrell
-    Version    : 1.0.0
-    Updated    : 2026-11-05
+    Version    : 1.1.0
+    Updated    : 2026-11-06
     Requires   : PowerShell 7 or later; WinGet
 
     Repository : https://github.com/joelcottrell/powershell-toolkit
@@ -186,6 +186,8 @@ if ($versionResult.ExitCode -ne 0) {
 $mode = [string]$appConfig.Mode
 $results = [System.Collections.Generic.List[object]]::new()
 $failed = $false
+$auditResult = $null
+$auditUpdateCount = $null
 
 Write-AppUpdateLog -Level 'INFO' -Message "Run started. Mode=$mode; AuditOnly=$([bool]$AuditOnly); WinGet=$($versionResult.Output -join ' ')."
 
@@ -214,6 +216,158 @@ if ($AuditOnly) {
 
     foreach ($line in $auditResult.Output) {
         Write-AppUpdateLog -Level 'AUDIT' -Message $line
+
+        if ($line -match '^\s*(\d+)\s+upgrades?\s+available\.?\s*([pscustomobject]@{
+        Action   = 'Audit'
+        ExitCode = $auditResult.ExitCode
+        Output   = $auditResult.Output
+    })
+}
+elseif ($mode -eq 'All') {
+    $arguments = @(
+        'upgrade',
+        '--all',
+        '--silent',
+        '--accept-source-agreements',
+        '--accept-package-agreements',
+        '--disable-interactivity'
+    )
+
+    if ([bool]$appConfig.IncludeUnknown) {
+        $arguments += '--include-unknown'
+    }
+
+    $updateResult = Invoke-WinGet -Arguments $arguments
+
+    foreach ($line in $updateResult.Output) {
+        Write-AppUpdateLog -Level 'INFO' -Message $line
+    }
+
+    if ($updateResult.ExitCode -eq $NoApplicableUpdateExitCode) {
+        Write-AppUpdateLog -Level 'INFO' -Message 'No applicable WinGet updates were found.'
+    }
+    elseif ($updateResult.ExitCode -ne 0) {
+        $failed = $true
+        Write-AppUpdateLog -Level 'ERROR' -Message "winget upgrade --all exited with code $($updateResult.ExitCode)."
+    }
+    else {
+        Write-AppUpdateLog -Level 'SUCCESS' -Message 'WinGet upgrade-all maintenance completed.'
+    }
+
+    $results.Add([pscustomobject]@{
+        Action   = 'UpgradeAll'
+        ExitCode = $updateResult.ExitCode
+        Output   = $updateResult.Output
+    })
+}
+elseif ($mode -eq 'AllowList') {
+    foreach ($packageId in @($appConfig.Packages)) {
+        if ([string]::IsNullOrWhiteSpace([string]$packageId)) {
+            continue
+        }
+
+        if (@($appConfig.ExcludedPackages) -contains $packageId) {
+            Write-AppUpdateLog -Level 'INFO' -Message "Skipped excluded allow-list package: $packageId"
+            continue
+        }
+
+        $arguments = @(
+            'upgrade',
+            '--id', [string]$packageId,
+            '--exact',
+            '--silent',
+            '--accept-source-agreements',
+            '--accept-package-agreements',
+            '--disable-interactivity'
+        )
+
+        if ([bool]$appConfig.IncludeUnknown) {
+            $arguments += '--include-unknown'
+        }
+
+        $updateResult = Invoke-WinGet -Arguments $arguments
+
+        foreach ($line in $updateResult.Output) {
+            Write-AppUpdateLog -Level 'INFO' -Message "[$packageId] $line"
+        }
+
+        $status = 'Updated'
+
+        if ($updateResult.ExitCode -eq $NoApplicableUpdateExitCode) {
+            $status = 'Current'
+            Write-AppUpdateLog -Level 'INFO' -Message "Package '$packageId' is already current."
+        }
+        elseif ($updateResult.ExitCode -ne 0) {
+            $status = 'Failed'
+            $failed = $true
+            Write-AppUpdateLog -Level 'ERROR' -Message "Package '$packageId' exited with code $($updateResult.ExitCode)."
+        }
+        else {
+            Write-AppUpdateLog -Level 'SUCCESS' -Message "Updated package: $packageId"
+        }
+
+        $results.Add([pscustomobject]@{
+            Action    = 'UpgradePackage'
+            PackageId = [string]$packageId
+            Status    = $status
+            ExitCode  = $updateResult.ExitCode
+            Output    = $updateResult.Output
+        })
+    }
+}
+else {
+    throw "Unsupported AppUpdates.Mode '$mode'. Use All or AllowList."
+}
+
+$summary = [ordered]@{
+    ComputerName = $env:COMPUTERNAME
+    RunId        = $RunId
+    User         = [Security.Principal.WindowsIdentity]::GetCurrent().Name
+    AuditOnly    = [bool]$AuditOnly
+    Mode         = $mode
+    Failed       = $failed
+    Completed    = (Get-Date).ToString('o')
+    Results      = $results
+}
+
+$summary | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $ReportFile -Encoding UTF8
+
+Write-AppUpdateLog -Level 'INFO' -Message "Run completed. Failed=$failed; Report=$ReportFile"
+
+if ($AuditOnly -and $null -ne $auditResult) {
+    Write-Host ''
+    Write-Host 'DesktopPolicy-Guard - App Update Maintenance Audit' -ForegroundColor Cyan
+    Write-Host '--------------------------------------------------' -ForegroundColor Cyan
+    Write-Host ("WinGet Version : {0}" -f ($versionResult.Output -join ' '))
+    Write-Host ("Mode           : {0}" -f $mode)
+    Write-Host ("Updates Found  : {0}" -f $(if ($null -ne $auditUpdateCount) { $auditUpdateCount } else { 'See output below' }))
+    Write-Host ("Excluded       : {0}" -f @($appConfig.ExcludedPackages).Count)
+
+    if (@($appConfig.ExcludedPackages).Count -gt 0) {
+        Write-Host ''
+        Write-Host 'Excluded Packages:' -ForegroundColor Yellow
+
+        foreach ($excludedId in @($appConfig.ExcludedPackages)) {
+            Write-Host ("  {0}" -f $excludedId)
+        }
+    }
+
+    Write-Host ''
+    $auditResult.Output | ForEach-Object { Write-Host $_ }
+    Write-Host ''
+    Write-Host 'Audit only. No applications were changed.' -ForegroundColor Green
+    Write-Host ("Log    : {0}" -f $LogFile)
+    Write-Host ("Report : {0}" -f $ReportFile)
+}
+
+if ($failed) {
+    exit 2
+}
+
+exit 0
+) {
+            $auditUpdateCount = [int]$Matches[1]
+        }
     }
 
     $results.Add([pscustomobject]@{
