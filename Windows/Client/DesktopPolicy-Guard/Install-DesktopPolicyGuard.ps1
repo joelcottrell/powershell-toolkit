@@ -162,10 +162,6 @@ if (-not [string]::IsNullOrWhiteSpace($WinSWSourcePath)) {
 Write-Host '[1/2] Installing Desktop Policy Guard service...' -ForegroundColor Cyan
 & $serviceInstaller @serviceParameters
 
-if ($LASTEXITCODE -ne 0) {
-    throw "Desktop Policy Guard service installer exited with code $LASTEXITCODE."
-}
-
 $appUpdateParameters = @{
     InstallDirectory = $InstallDirectory
     TaskPath         = $TaskPath
@@ -186,10 +182,6 @@ if ($StartAppUpdatesNow) {
 Write-Host ''
 Write-Host '[2/2] Installing App Update Maintenance...' -ForegroundColor Cyan
 & $appUpdateInstaller @appUpdateParameters
-
-if ($LASTEXITCODE -ne 0) {
-    throw "App Update Maintenance installer exited with code $LASTEXITCODE."
-}
 
 Write-Host ''
 Write-Host 'DesktopPolicy-Guard installation completed.' -ForegroundColor Green
