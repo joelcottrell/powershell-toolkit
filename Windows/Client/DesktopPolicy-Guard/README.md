@@ -40,6 +40,7 @@ Windows/
         |   |-- DesktopPolicy-Guard.Tests.ps1
         |-- Logs/
         |   |-- .gitkeep
+        |-- Install-DesktopPolicyGuard.ps1
         |-- Install-DesktopPolicyGuardService.ps1
         |-- Start-DesktopPolicyGuard.ps1
         |-- Remove-DesktopPolicyGuardService.ps1
@@ -56,6 +57,20 @@ Windows/
 ---
 
 ## Install
+
+### Complete installation
+
+The recommended entry point installs or refreshes both components from an elevated PowerShell 7 session:
+
+~~~powershell
+.\Install-DesktopPolicyGuard.ps1 `
+    -EnableAppUpdates `
+    -StartAppUpdatesNow
+~~~
+
+Existing deployments can keep their current service ID, display name, install directory, and Task Scheduler folder by passing those values to the complete installer.
+
+### Policy service only
 
 Open Windows PowerShell as Administrator:
 
