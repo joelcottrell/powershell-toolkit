@@ -6,6 +6,20 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 
 ---
 
+## [1.2.0] - 2026-11-06
+
+### Added
+
+- Complete Install-DesktopPolicyGuard.ps1 entry point for deploying both the Windows service and WinGet maintenance.
+- Configurable service ID and service display name for existing or customized deployments.
+- Console summary for WinGet audit runs, including version, mode, update count, exclusions, log path, and report path.
+
+### Changed
+
+- Service installer now supports preserving an existing custom service identity.
+- Pester coverage includes the complete installer.
+
+---
 ## [1.1.0] - 2026-11-05
 
 ### Added
