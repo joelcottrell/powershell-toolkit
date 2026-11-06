@@ -8,6 +8,7 @@
 BeforeAll {
     $script:ProjectRoot = Split-Path -Parent $PSScriptRoot
     $script:Scripts = @(
+        'Install-DesktopPolicyGuard.ps1'
         'Install-DesktopPolicyGuardService.ps1'
         'Start-DesktopPolicyGuard.ps1'
         'Remove-DesktopPolicyGuardService.ps1'
