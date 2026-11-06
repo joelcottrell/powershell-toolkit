@@ -12,6 +12,7 @@ Windows workstation administration and user experience.
 
 | Project | Description | Tier |
 | --- | --- | --- |
+| [DesktopPolicy-Guard](./DesktopPolicy-Guard/README.md) | Enforces workstation policy settings as a service and optionally runs scheduled WinGet application maintenance | 2 |
 | [WSL](./WSL/README.md) | Install, remove, and toggle Windows Subsystem for Linux | 1 |
 
 New projects start from a skeleton in [`_Template/`](../../_Template/README.md).
