@@ -1,0 +1,2 @@
+SamAccountName,MigrationDirection,TargetOU,ChangeReference
+fixture.user,ROOT_TO_CHILD,,CHANGE-101
