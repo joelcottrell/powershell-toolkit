@@ -1,0 +1,89 @@
+{
+  "Synthetic": true,
+  "Groups": [
+    {
+      "Name": "FictionalGroup1001",
+      "SID": "S-1-5-21-4-5-6-1001",
+      "DistinguishedName": "CN=FictionalGroup1001,DC=branch,DC=example,DC=test",
+      "Scope": "Global",
+      "Category": "Security",
+      "Domain": "branch.example.test",
+      "IsPrimary": false
+    },
+    {
+      "Name": "FictionalGroup1002",
+      "SID": "S-1-5-21-4-5-6-1002",
+      "DistinguishedName": "CN=FictionalGroup1002,DC=branch,DC=example,DC=test",
+      "Scope": "Universal",
+      "Category": "Security",
+      "Domain": "branch.example.test",
+      "IsPrimary": false
+    },
+    {
+      "Name": "FictionalGroup1003",
+      "SID": "S-1-5-21-4-5-6-1003",
+      "DistinguishedName": "CN=FictionalGroup1003,DC=branch,DC=example,DC=test",
+      "Scope": "DomainLocal",
+      "Category": "Security",
+      "Domain": "branch.example.test",
+      "IsPrimary": false
+    },
+    {
+      "Name": "FictionalGroup1004",
+      "SID": "S-1-5-21-4-5-6-1004",
+      "DistinguishedName": "CN=FictionalGroup1004,DC=branch,DC=example,DC=test",
+      "Scope": "Global",
+      "Category": "Security",
+      "Domain": "branch.example.test",
+      "IsPrimary": false
+    }
+  ],
+  "TargetGroups": [
+    {
+      "Name": "FictionalTarget1001",
+      "SID": "S-1-5-21-1-2-3-1001",
+      "DistinguishedName": "CN=FictionalTarget1001,DC=example,DC=test",
+      "GroupScope": "Global",
+      "GroupCategory": "Security"
+    },
+    {
+      "Name": "FictionalTarget1002",
+      "SID": "S-1-5-21-1-2-3-1002",
+      "DistinguishedName": "CN=FictionalTarget1002,DC=example,DC=test",
+      "GroupScope": "Global",
+      "GroupCategory": "Security"
+    }
+  ],
+  "Maps": [
+    {
+      "MigrationDirection": "FIXTURE",
+      "SourceGroupSID": "S-1-5-21-4-5-6-1001",
+      "TargetGroupSID": "S-1-5-21-1-2-3-1001",
+      "Action": "Map",
+      "ApprovedBy": "FictionalReviewer",
+      "ApprovalReference": "CHANGE-101"
+    },
+    {
+      "MigrationDirection": "FIXTURE",
+      "SourceGroupSID": "S-1-5-21-4-5-6-1002",
+      "TargetGroupSID": "S-1-5-21-1-2-3-1002",
+      "Action": "Map",
+      "ApprovedBy": "FictionalReviewer",
+      "ApprovalReference": "CHANGE-101"
+    }
+  ],
+  "Target": {
+    "RIDMaster": "dc.example.test",
+    "DNSRoot": "example.test",
+    "DistinguishedName": "DC=example,DC=test",
+    "DomainSID": {
+      "Value": "S-1-5-21-1-2-3"
+    }
+  },
+  "ExpectedStatuses": [
+    "ConfiguredMapping",
+    "ConfiguredMapping",
+    "SameGroupRetentionReview",
+    "Unmapped"
+  ]
+}

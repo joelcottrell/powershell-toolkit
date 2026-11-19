@@ -1,0 +1,16 @@
+# Local configuration, samples stay tracked
+Config/*
+!Config/*.example.json
+!Config/*.example.csv
+Examples/*
+!Examples/*.example.csv
+
+# Directory data and execution state
+Input/
+Output/
+Reports/
+Logs/*
+!Logs/.gitkeep
+*.log
+*.jsonl
+*.clixml

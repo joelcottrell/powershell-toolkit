@@ -1,0 +1,31 @@
+{
+  "SchemaVersion": 1,
+  "ForestRoot": "example.test",
+  "ChildDomain": "branch.example.test",
+  "ApprovedChildObjectClasses": [
+    "msExchActiveSyncDevices",
+    "msExchActiveSyncDevice"
+  ],
+  "Directions": {
+    "ROOT_TO_CHILD": {
+      "SourceDomain": "example.test",
+      "TargetDomain": "branch.example.test",
+      "DefaultTargetOU": "OU=ExampleUsers,DC=branch,DC=example,DC=test"
+    },
+    "CHILD_TO_ROOT": {
+      "SourceDomain": "branch.example.test",
+      "TargetDomain": "example.test",
+      "DefaultTargetOU": "OU=ExampleUsers,DC=example,DC=test"
+    }
+  },
+  "GroupCatalog": {
+    "Prefixes": [
+      "FictionalSuite",
+      "ExampleApp"
+    ],
+    "TrailingNameSuffix": "Branch",
+    "MaxInventoryGroups": 30000,
+    "MaxSelectedGroups": 5000,
+    "MaxCandidatePairs": 20000
+  }
+}
